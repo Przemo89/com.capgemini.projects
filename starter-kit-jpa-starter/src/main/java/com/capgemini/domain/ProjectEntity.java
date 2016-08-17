@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,8 +35,8 @@ public class ProjectEntity {
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	private boolean isInternal;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
-	private List<EmployeeProjectEntity> employeeProjects = new ArrayList<EmployeeProjectEntity>();
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project")
+	private List<EmployeeProjectEntity> employeeProjects;
 	
 	protected ProjectEntity() {
 		

@@ -1,12 +1,12 @@
 package com.capgemini.domain;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,8 +45,8 @@ public class EmployeeEntity {
 	@Column(name = "phone_work", nullable = false, length = 15, unique = true)
 	private String phoneWorkNumber;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
-	private List<EmployeeProjectEntity> employeeProjects = new ArrayList<EmployeeProjectEntity>();
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "employee")
+	private List<EmployeeProjectEntity> employeeProjects;
 
 	public EmployeeEntity(long id, DepartamentEntity departament, String firstName, String lastName, String pin,
 			Date birthDate, String email, String phoneHomeNumber, String phoneWorkNumber,
@@ -148,4 +148,5 @@ public class EmployeeEntity {
 	public void setEmployeeProjects(List<EmployeeProjectEntity> employeeProjects) {
 		this.employeeProjects = employeeProjects;
 	}
+	
 }
