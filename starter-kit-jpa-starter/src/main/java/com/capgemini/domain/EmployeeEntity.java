@@ -1,13 +1,17 @@
 package com.capgemini.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -40,9 +44,13 @@ public class EmployeeEntity {
 	private String phoneHomeNumber;
 	@Column(name = "phone_work", nullable = false, length = 15, unique = true)
 	private String phoneWorkNumber;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
+	private List<EmployeeProjectEntity> employeeProjects = new ArrayList<EmployeeProjectEntity>();
 
 	public EmployeeEntity(long id, DepartamentEntity departament, String firstName, String lastName, String pin,
-			Date birthDate, String email, String phoneHomeNumber, String phoneWorkNumber) {
+			Date birthDate, String email, String phoneHomeNumber, String phoneWorkNumber,
+			List<EmployeeProjectEntity> employeeProjects) {
 		this.id = id;
 		this.departament = departament;
 		this.firstName = firstName;
@@ -52,8 +60,11 @@ public class EmployeeEntity {
 		this.email = email;
 		this.phoneHomeNumber = phoneHomeNumber;
 		this.phoneWorkNumber = phoneWorkNumber;
+		this.employeeProjects = employeeProjects;
 	}
-	
+
+
+
 	protected EmployeeEntity() {
 		
 	}
@@ -130,4 +141,11 @@ public class EmployeeEntity {
 		this.phoneWorkNumber = phoneWorkNumber;
 	}
 	
+	public List<EmployeeProjectEntity> getEmployeeProjects() {
+		return employeeProjects;
+	}
+
+	public void setEmployeeProjects(List<EmployeeProjectEntity> employeeProjects) {
+		this.employeeProjects = employeeProjects;
+	}
 }

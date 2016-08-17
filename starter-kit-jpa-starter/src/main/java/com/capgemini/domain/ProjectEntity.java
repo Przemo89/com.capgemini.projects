@@ -1,11 +1,16 @@
 package com.capgemini.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -29,15 +34,20 @@ public class ProjectEntity {
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	private boolean isInternal;
 	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+	private List<EmployeeProjectEntity> employeeProjects = new ArrayList<EmployeeProjectEntity>();
+	
 	protected ProjectEntity() {
 		
 	}
 	
-	public ProjectEntity(long id, EmployeeEntity manager, String name, boolean isInternal) {
+	public ProjectEntity(long id, EmployeeEntity manager, String name, boolean isInternal,
+			List<EmployeeProjectEntity> employeeProjects) {
 		this.id = id;
 		this.manager = manager;
 		this.name = name;
 		this.isInternal = isInternal;
+		this.employeeProjects = employeeProjects;
 	}
 
 	public long getId() {
@@ -70,5 +80,13 @@ public class ProjectEntity {
 
 	public void setInternal(boolean isInternal) {
 		this.isInternal = isInternal;
+	}
+	
+	public List<EmployeeProjectEntity> getEmployeeProjects() {
+		return employeeProjects;
+	}
+
+	public void setEmployeeProjects(List<EmployeeProjectEntity> employeeProjects) {
+		this.employeeProjects = employeeProjects;
 	}
 }
