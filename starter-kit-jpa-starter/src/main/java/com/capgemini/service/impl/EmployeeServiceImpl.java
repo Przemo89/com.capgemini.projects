@@ -51,7 +51,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if (!projectsManagedByEmployee.isEmpty()) {
 			throw new EmployeeEntityIsManagerOfProjectException(employee.getId());
 		}
-		employeeRepository.delete(employee);
+		employeeRepository.deleteEmployee(employee);
 	}
 
 	@Override

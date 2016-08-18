@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.domain.ProjectEntity;
-import com.capgemini.exceptions.ProjectEntityExistsException;
 import com.capgemini.exceptions.ProjectEntityNotExistException;
 
 @RunWith(SpringRunner.class)
@@ -77,27 +76,6 @@ public class ProjectServiceTest {
 		// then
 		assertEquals(name, projectSaved.getName());
 		assertEquals(idManager, projectSaved.getManager().getId());
-	}
-	
-	@Test
-	public void testShouldThrowExceptionWhenSaveProject() throws Exception {
-		// given
-		final long idManager = 8L;
-		final long idProjectThatExists = 3L;
-		final EmployeeEntity manager = employeeService.findEmployeeById(idManager);
-		final boolean isInternal = true;
-		ProjectEntity projectThatAlreadyExists = projectService.findProjectById(idProjectThatExists);
-		ProjectEntity project = new ProjectEntity();
-		project.setName(projectThatAlreadyExists.getName());
-		project.setManager(manager);
-		project.setInternal(isInternal);
-		
-		// then
-		thrown.expect(ProjectEntityExistsException.class);
-		thrown.expectMessage("Project cannot be saved, because it already exists!");
-
-		// when
-		projectService.saveProject(project);
 	}
 	
 	@Test

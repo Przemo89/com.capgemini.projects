@@ -3,13 +3,11 @@ package com.capgemini.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.capgemini.dao.ProjectDao;
 import com.capgemini.domain.ProjectEntity;
-import com.capgemini.exceptions.ProjectEntityExistsException;
 import com.capgemini.exceptions.ProjectEntityNotExistException;
 import com.capgemini.service.ProjectService;
 
@@ -35,14 +33,8 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	@Override
-	public ProjectEntity saveProject(ProjectEntity project) throws ProjectEntityExistsException {
-		ProjectEntity projectSaved;
-		try {
-			projectSaved = projectRepository.save(project);
-		} catch (DataIntegrityViolationException e) {
-			throw new ProjectEntityExistsException();
-		}
-		return projectSaved;
+	public ProjectEntity saveProject(ProjectEntity project) {
+		return projectRepository.save(project);
 	}
 
 	@Override
@@ -50,7 +42,7 @@ public class ProjectServiceImpl implements ProjectService {
 		if (!projectRepository.exists(project.getId())) {
 			throw new ProjectEntityNotExistException(project.getId());
 		}
-		projectRepository.delete(project);
+		projectRepository.deleteProject(project);
 	}
 
 	@Override

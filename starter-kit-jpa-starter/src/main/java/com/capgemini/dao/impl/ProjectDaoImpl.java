@@ -13,6 +13,12 @@ import com.capgemini.domain.ProjectEntity;
 public class ProjectDaoImpl extends AbstractDao<ProjectEntity, Long> implements ProjectDao {
 
 	@Override
+	public void deleteProject(ProjectEntity project) {
+		project = entityManager.merge(project);
+		entityManager.remove(project);
+	}
+
+	@Override
 	public List<ProjectEntity> findProjectsByIdManager(long idManager) {
 		TypedQuery<ProjectEntity> query = entityManager.createQuery(
 				"select project from ProjectEntity project where id_manager = :id_manager", ProjectEntity.class);

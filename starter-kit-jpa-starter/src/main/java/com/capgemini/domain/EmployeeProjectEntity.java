@@ -28,11 +28,11 @@ public class EmployeeProjectEntity {
 	private long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_employee")
+	@JoinColumn(name = "id_employee", nullable = false)
 	private EmployeeEntity employee;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_project")
+	@JoinColumn(name = "id_project", nullable = false)
 	private ProjectEntity project;
 	
 	@Column(name = "hire_date", nullable = false)

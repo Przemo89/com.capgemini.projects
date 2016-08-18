@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -25,17 +26,6 @@ import com.capgemini.listeners.EmployeeEntityListener;
 @EntityListeners(EmployeeEntityListener.class)
 public class EmployeeEntity implements Serializable{
 
-//	public ProjectEntity getProject() {
-//		return project;
-//	}
-//
-//	public void setProject(ProjectEntity project) {
-//		this.project = project;
-//	}
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1346834L;
 
 	@Id
@@ -62,7 +52,7 @@ public class EmployeeEntity implements Serializable{
 	@Column(name = "phone_work", nullable = false, length = 15, unique = true)
 	private String phoneWorkNumber;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "employee")
 	private List<EmployeeProjectEntity> employeeProjects;
 
 	public EmployeeEntity(DepartamentEntity departament, String firstName, String lastName, String pin,

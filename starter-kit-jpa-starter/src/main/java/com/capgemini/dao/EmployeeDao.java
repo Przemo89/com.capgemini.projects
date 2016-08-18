@@ -17,6 +17,6 @@ public interface EmployeeDao extends Dao<EmployeeEntity, Long> {
 	
 	List<EmployeeEntity> findEmployeesByDepartament(Long idDepartament);
 	
-//	void deleteEmployee(EmployeeEntity employee);
+	void deleteEmployee(EmployeeEntity employee);
 
 }

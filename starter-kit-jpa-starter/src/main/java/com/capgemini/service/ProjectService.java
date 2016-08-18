@@ -4,11 +4,10 @@ import java.util.List;
 
 import com.capgemini.domain.ProjectEntity;
 import com.capgemini.exceptions.ProjectEntityNotExistException;
-import com.capgemini.exceptions.ProjectEntityExistsException;
 
 public interface ProjectService {
 
-	ProjectEntity saveProject(ProjectEntity project) throws ProjectEntityExistsException;
+	ProjectEntity saveProject(ProjectEntity project);
 	
 	void deleteProject(ProjectEntity project) throws ProjectEntityNotExistException;
 	

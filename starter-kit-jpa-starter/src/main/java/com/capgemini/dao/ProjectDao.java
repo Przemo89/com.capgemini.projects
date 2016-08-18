@@ -7,4 +7,6 @@ import com.capgemini.domain.ProjectEntity;
 public interface ProjectDao extends Dao<ProjectEntity, Long> {
 
 	List<ProjectEntity> findProjectsByIdManager(long idManager);
+	
+	void deleteProject(ProjectEntity project);
 }

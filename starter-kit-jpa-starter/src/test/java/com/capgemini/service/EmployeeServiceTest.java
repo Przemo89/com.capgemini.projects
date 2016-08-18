@@ -214,7 +214,7 @@ public class EmployeeServiceTest {
 	@Test
 	public void testDeleteEmployee() throws Exception {
 		// given
-		final long idEmployeeToBeDeleted = 17L;
+		final long idEmployeeToBeDeleted = 11L;
 		EmployeeEntity employee = employeeService.findEmployeeById(idEmployeeToBeDeleted);
 
 		// when
