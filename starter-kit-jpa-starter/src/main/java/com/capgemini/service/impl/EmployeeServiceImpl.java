@@ -12,7 +12,7 @@ import com.capgemini.exceptions.EmployeeEntityNotExistException;
 import com.capgemini.service.EmployeeService;
 
 @Service
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
@@ -27,11 +27,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional(readOnly = false)
 	public void deleteEmployee(EmployeeEntity employee) throws EmployeeEntityNotExistException {
-		if (employeeRepository.exists(employee.getId())) {
-			employeeRepository.deleteEmployee(employee);
-			return;
+		if (!employeeRepository.exists(employee.getId())) {
+			throw new EmployeeEntityNotExistException(employee.getId());
 		}
-		throw new EmployeeEntityNotExistException(employee.getId());
+		employeeRepository.deleteEmployee(employee);
 	}
 
 	@Override

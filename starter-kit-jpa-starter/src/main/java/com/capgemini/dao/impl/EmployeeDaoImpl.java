@@ -15,8 +15,6 @@ public class EmployeeDaoImpl extends AbstractDao<EmployeeEntity, Long> implement
 
 	@Override
 	public void deleteEmployee(EmployeeEntity employee) {
-		// TODO Auto-generated method stub
-//		EmployeeEntity employeeToBeDeleted = entityManager.getReference(EmployeeEntity.class, employee.getId());
 		employee = entityManager.merge(employee);
 		entityManager.remove(employee);
 	}
