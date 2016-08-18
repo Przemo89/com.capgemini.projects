@@ -33,7 +33,7 @@ insert into employees (id, id_departament, first_name, last_name, PIN, birth_dat
 insert into employees (id, id_departament, first_name, last_name, PIN, birth_date, email, phone_home, phone_work) values('13','6','Harry','Bob','70021054637','1970-02-10','harry_bob@company.com','713544512','772345333');
 insert into employees (id, id_departament, first_name, last_name, PIN, birth_date, email, phone_home, phone_work) values('14','6','Dante','Alighieri','67021054637','1967-02-10','dante_alighieri@company.com','713544513','772345334');
 insert into employees (id, id_departament, first_name, last_name, PIN, birth_date, email, phone_home, phone_work) values('15','4','Danuta','Piasek','85021054637','1985-02-10','danuta_piasek@company.com','713544514','772345335');
-insert into employees (id, id_departament, first_name, last_name, PIN, birth_date, email, phone_home, phone_work) values('16','2','Frank','Pfang','67021054637','1967-02-10','frank_pfang@company.com','713544515','772345336');
+insert into employees (id, id_departament, first_name, last_name, PIN, birth_date, email, phone_home, phone_work) values('16','2','Frank','Pfang','67021054527','1967-02-10','frank_pfang@company.com','713544515','772345336');
 insert into employees (id, id_departament, first_name, last_name, PIN, birth_date, email, phone_home, phone_work) values('17','6','Mark','oFang','53011712637','1953-01-17','mark_ofang@company.com','713544516','772345337');
 
 insert into projects (id, id_manager, name, is_internal) values ('1', '2', 'Communication', '1');

@@ -35,7 +35,7 @@ public class ProjectEntity {
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	private boolean isInternal;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
 	private List<EmployeeProjectEntity> employeeProjects;
 	
 	protected ProjectEntity() {

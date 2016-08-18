@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.capgemini.dao.EmployeeDao;
 import com.capgemini.domain.EmployeeEntity;
+import com.capgemini.exceptions.EmployeeEntityNotExistException;
 import com.capgemini.service.EmployeeService;
 
 @Service
@@ -18,44 +19,54 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private EmployeeDao employeeRepository;
 	
 	@Override
+	@Transactional(readOnly = false)
 	public EmployeeEntity saveEmployee(EmployeeEntity employee) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void deleteEmployee(Long idEmployee) {
-		// TODO Auto-generated method stub
-		
+		return employeeRepository.save(employee);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public EmployeeEntity updateEmployee(EmployeeEntity employee) {
-		// TODO Auto-generated method stub
+	public void deleteEmployee(EmployeeEntity employee) throws EmployeeEntityNotExistException {
+		if (employeeRepository.exists(employee.getId())) {
+			employeeRepository.deleteEmployee(employee);
+			return;
+		}
+		throw new EmployeeEntityNotExistException(employee.getId());
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public EmployeeEntity updateEmployee(EmployeeEntity employee) throws EmployeeEntityNotExistException {
+		if (!employeeRepository.exists(employee.getId())) {
+			throw new EmployeeEntityNotExistException(employee.getId());
+		}
 		return employeeRepository.update(employee);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int setEmployeeDepartament(Long idEmployee, Long idDepartament) {
+	public int setEmployeeDepartament(Long idEmployee, Long idDepartament) throws EmployeeEntityNotExistException {
+		if (!employeeRepository.exists(idEmployee)) {
+			throw new EmployeeEntityNotExistException(idEmployee);
+		}
 		return employeeRepository.setEmployeeDepartament(idEmployee, idDepartament);
 	}
 
 	@Override
-	public EmployeeEntity findEmployeeByFirstAndLastName(String firstName, String lastName) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<EmployeeEntity> findEmployeeByFirstAndLastName(String firstName, String lastName) {
+		return employeeRepository.findEmployeeByFirstAndLastName(firstName, lastName);
 	}
 
 	@Override
 	public List<EmployeeEntity> findEmployeesByDepartament(Long idDepartament) {
-		// TODO Auto-generated method stub
-		return null;
+		return employeeRepository.findEmployeesByDepartament(idDepartament);
 	}
 
 	@Override
-	public EmployeeEntity findEmployeeById(Long id) {
-		return employeeRepository.findOne(id);
+	public EmployeeEntity findEmployeeById(Long idEmployee) {
+		if (employeeRepository.exists(idEmployee)) {
+			return employeeRepository.findOne(idEmployee);
+		}
+		return null;
 	}
 }

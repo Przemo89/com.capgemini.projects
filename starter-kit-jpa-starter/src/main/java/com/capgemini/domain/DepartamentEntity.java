@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "departaments")
 public class DepartamentEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
@@ -24,7 +24,7 @@ public class DepartamentEntity {
 	@Column(name = "phone_mobile", nullable = false, length = 15, unique = true)
 	private String phoneMobileNumber;
 
-	protected DepartamentEntity() {
+	public DepartamentEntity() {
 		
 	}
 	
@@ -76,4 +76,40 @@ public class DepartamentEntity {
 	public void setPhoneMobileNumber(String phoneMobileNumber) {
 		this.phoneMobileNumber = phoneMobileNumber;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DepartamentEntity other = (DepartamentEntity) obj;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (id != other.id)
+			return false;
+		if (nameDepartament == null) {
+			if (other.nameDepartament != null)
+				return false;
+		} else if (!nameDepartament.equals(other.nameDepartament))
+			return false;
+		if (phoneMobileNumber == null) {
+			if (other.phoneMobileNumber != null)
+				return false;
+		} else if (!phoneMobileNumber.equals(other.phoneMobileNumber))
+			return false;
+		if (phoneStationaryNumber == null) {
+			if (other.phoneStationaryNumber != null)
+				return false;
+		} else if (!phoneStationaryNumber.equals(other.phoneStationaryNumber))
+			return false;
+		return true;
+	}
+	
+	
 }

@@ -13,8 +13,10 @@ public interface EmployeeDao extends Dao<EmployeeEntity, Long> {
 	 */
 	int setEmployeeDepartament(Long idEmployee, Long idDepartament);
 	
-	EmployeeEntity findEmployeeByFirstAndLastName(String firstName, String lastName);
+	List<EmployeeEntity> findEmployeeByFirstAndLastName(String firstName, String lastName);
 	
 	List<EmployeeEntity> findEmployeesByDepartament(Long idDepartament);
+	
+	void deleteEmployee(EmployeeEntity employee);
 
 }
