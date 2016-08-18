@@ -1,6 +1,5 @@
 package com.capgemini.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -26,19 +25,19 @@ public class ProjectEntity {
 	private long id;
 	
 	@OneToOne
-	@JoinColumn(name = "id_manager")
+	@JoinColumn(name = "id_manager", nullable = true)
 	private EmployeeEntity manager;
 	
-	@Column(name = "name", nullable = false, length = 255)
+	@Column(name = "name", nullable = false, unique = true, length = 255)
 	private String name;
 	@Column(name = "is_internal", nullable = false)
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	private boolean isInternal;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project")
 	private List<EmployeeProjectEntity> employeeProjects;
 	
-	protected ProjectEntity() {
+	public ProjectEntity() {
 		
 	}
 	

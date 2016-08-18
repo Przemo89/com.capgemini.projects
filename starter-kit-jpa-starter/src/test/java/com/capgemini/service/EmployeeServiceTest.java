@@ -15,23 +15,21 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.capgemini.domain.DepartamentEntity;
 import com.capgemini.domain.EmployeeEntity;
+import com.capgemini.exceptions.EmployeeEntityExistsException;
+import com.capgemini.exceptions.EmployeeEntityIsManagerOfProjectException;
 import com.capgemini.exceptions.EmployeeEntityNotExistException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 public class EmployeeServiceTest {
 	
 	@Autowired
 	private EmployeeService employeeService;
-	
-//	@Before
-//	@Sql(scripts = "import.sql")
-//	public void init() {
-//		
-//	}
 	
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -61,10 +59,8 @@ public class EmployeeServiceTest {
     	final int properNumberOfUpdatedEmployees = 1;
     	// when
     	final int numberOfUpdatedEmployees = employeeService.setEmployeeDepartament(idEmployee, idDepartament);
-    	final EmployeeEntity updatedEmployee = employeeService.findEmployeeById(idEmployee);
     	// then
     	assertEquals(properNumberOfUpdatedEmployees, numberOfUpdatedEmployees);
-    	assertEquals(idDepartament, updatedEmployee.getDepartament().getId());
     }
     
 	@Test
@@ -80,9 +76,8 @@ public class EmployeeServiceTest {
 		// then
 		employeeService.setEmployeeDepartament(idEmployeeThatNotExist, idDepartamentThatExist);
 	}
-    
 
-    @Test
+	@Test
     public void testShouldUpdateEmployee() throws Exception {
     	// given
     	final long idEmployee = 3L;
@@ -103,7 +98,7 @@ public class EmployeeServiceTest {
 	@Test
 	public void testShouldThrowExceptionWhenUpdateEmployee() throws Exception {
 		// given
-		final long idEmployeeThatExist = 12L;
+		final long idEmployeeThatExist = 10L;
 		final long idEmployeeThatNotExist = 79L;
 		EmployeeEntity employeeExisting = employeeService.findEmployeeById(idEmployeeThatExist);
 		employeeExisting.setId(idEmployeeThatNotExist);
@@ -117,14 +112,14 @@ public class EmployeeServiceTest {
 	}
     
     @Test
-    public void testShouldSaveEmployee() {
+    public void testShouldSaveEmployee() throws Exception {
     	// given
     	final DepartamentEntity departament = new DepartamentEntity();
     	final long idDepartament = 3L;
     	departament.setId(idDepartament);
     	final String firstName = "Bob";
     	final String lastName = "Bob2";
-    	final String pin = "33334333333";
+    	final String pin = "33333553333";
     	final Date birthDate = new Date(1968-03-30);
     	final String email = "ran23om@random.com";
     	final String phoneHomeNumber = "713544779";
@@ -140,6 +135,38 @@ public class EmployeeServiceTest {
     	assertEquals(pin, employeeSaved.getPin());
     	assertEquals(email, employeeSaved.getEmail());
     	assertEquals(idDepartament, employeeSaved.getDepartament().getId());
+    }
+    
+    @Test
+    public void testShouldThrowExceptionWhenSaveEmployee() throws Exception {
+		// given
+		final long idEmployeeThatExist = 9L;
+		EmployeeEntity employeeExisting = employeeService.findEmployeeById(idEmployeeThatExist);
+		
+		// when
+		thrown.expect(EmployeeEntityExistsException.class);
+		thrown.expectMessage("Employee entity cannot be saved, because it already exists!");
+		
+		// then
+		employeeService.saveEmployee(employeeExisting);
+    }
+    
+    @Test
+    public void testShouldThrowAnotherExceptionWhenSaveEmployee() throws Exception {
+		// given
+		final long idEmployeeThatExist = 9L;
+		EmployeeEntity employeeExisting = employeeService.findEmployeeById(idEmployeeThatExist);
+		EmployeeEntity employee = new EmployeeEntity();
+		employee.setPin(employeeExisting.getPin());
+		employee.setFirstName(employeeExisting.getFirstName());
+		employee.setLastName(employeeExisting.getLastName());
+		
+		// when
+		thrown.expect(EmployeeEntityExistsException.class);
+		thrown.expectMessage("Employee entity cannot be saved, because it already exists!");
+		
+		// then
+		employeeService.saveEmployee(employee);
     }
     
 	@Test
@@ -187,7 +214,7 @@ public class EmployeeServiceTest {
 	@Test
 	public void testDeleteEmployee() throws Exception {
 		// given
-		final long idEmployeeToBeDeleted = 16;
+		final long idEmployeeToBeDeleted = 17L;
 		EmployeeEntity employee = employeeService.findEmployeeById(idEmployeeToBeDeleted);
 
 		// when
@@ -211,6 +238,20 @@ public class EmployeeServiceTest {
 		
 		// then
 		employeeService.deleteEmployee(employeeExisting);
+	}
+	
+	@Test
+	public void testShouldThrowAnotherExceptionWhenDeleteEmployee() throws Exception {
+		// given
+		final long idEmployeeThatIsManagingProject = 12L;
+		EmployeeEntity employeeThatIsManagingProject = employeeService.findEmployeeById(idEmployeeThatIsManagingProject);
+		
+		// when
+		thrown.expect(EmployeeEntityIsManagerOfProjectException.class);
+		thrown.expectMessage("Change project's manager and then try again.");
+		
+		// then
+		employeeService.deleteEmployee(employeeThatIsManagingProject);
 	}
 
 }

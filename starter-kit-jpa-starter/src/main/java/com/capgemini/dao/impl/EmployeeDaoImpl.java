@@ -13,11 +13,11 @@ import com.capgemini.domain.EmployeeEntity;
 @Repository
 public class EmployeeDaoImpl extends AbstractDao<EmployeeEntity, Long> implements EmployeeDao {
 
-	@Override
-	public void deleteEmployee(EmployeeEntity employee) {
-		employee = entityManager.merge(employee);
-		entityManager.remove(employee);
-	}
+//	@Override
+//	public void deleteEmployee(EmployeeEntity employee) {
+//		employee = entityManager.merge(employee);
+//		entityManager.remove(employee);
+//	}
 
 	@Override
 	public int setEmployeeDepartament(Long idEmployee, Long idDepartament) {

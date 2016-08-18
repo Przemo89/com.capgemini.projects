@@ -25,6 +25,14 @@ import com.capgemini.listeners.EmployeeEntityListener;
 @EntityListeners(EmployeeEntityListener.class)
 public class EmployeeEntity implements Serializable{
 
+//	public ProjectEntity getProject() {
+//		return project;
+//	}
+//
+//	public void setProject(ProjectEntity project) {
+//		this.project = project;
+//	}
+
 	/**
 	 * 
 	 */

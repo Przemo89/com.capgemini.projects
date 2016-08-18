@@ -1,8 +1,10 @@
 package com.capgemini.dao;
 
+import java.util.List;
+
 import com.capgemini.domain.ProjectEntity;
 
 public interface ProjectDao extends Dao<ProjectEntity, Long> {
 
-	void deleteProject(ProjectEntity project);
+	List<ProjectEntity> findProjectsByIdManager(long idManager);
 }
