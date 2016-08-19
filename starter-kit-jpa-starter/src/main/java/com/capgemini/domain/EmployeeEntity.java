@@ -25,9 +25,9 @@ import com.capgemini.listeners.EmployeeEntityListener;
 
 @Entity
 @Table(name = "employees")
-//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @EntityListeners(EmployeeEntityListener.class)
-public class EmployeeEntity implements Serializable{
+public class EmployeeEntity extends AbstractVersionControlEntity implements Serializable{
 
 	private static final long serialVersionUID = 1346834L;
 

@@ -3,7 +3,6 @@ package com.capgemini.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,15 +28,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional(readOnly = false)
 	public EmployeeEntity saveEmployee(EmployeeEntity employee) throws EmployeeEntityExistsException {
-		EmployeeEntity employeeSaved;
+//		EmployeeEntity employeeSaved;
 		if (employeeRepository.exists(employee.getId())) {
 			throw new EmployeeEntityExistsException();
 		}
-		try {
-			employeeSaved = employeeRepository.save(employee);
-		} catch (DataIntegrityViolationException e) {
-			throw new EmployeeEntityExistsException();
-		}
+		EmployeeEntity employeeSaved = employeeRepository.save(employee);
 		return employeeSaved;
 	}
 

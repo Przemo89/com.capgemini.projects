@@ -1,5 +1,6 @@
 package com.capgemini.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -18,7 +19,9 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "projects")
-public class ProjectEntity {
+public class ProjectEntity extends AbstractVersionControlEntity implements Serializable {
+
+	private static final long serialVersionUID = -3478563478561L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

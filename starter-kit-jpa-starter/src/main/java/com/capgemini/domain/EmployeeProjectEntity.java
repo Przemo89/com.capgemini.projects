@@ -1,5 +1,6 @@
 package com.capgemini.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -29,7 +30,9 @@ import com.capgemini.enumerations.EmployeeFunction;
 				resultClass= EmployeeProjectEntity.class)
 @Entity
 @Table(name = "employees_projects")
-public class EmployeeProjectEntity {
+public class EmployeeProjectEntity extends AbstractVersionControlEntity implements Serializable {
+
+	private static final long serialVersionUID = -456235786L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

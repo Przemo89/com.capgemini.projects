@@ -20,7 +20,6 @@ public class EmployeeProjectDaoImpl extends AbstractDao<EmployeeProjectEntity, L
 				"update EmployeeProjectEntity set termination_date = :termination_date where id = :id");
 		query.setParameter("id", employeeProject.getId());
 		query.setParameter("termination_date", terminationDate);
-		// TODO Auto-generated method stub
 		return query.executeUpdate();
 	}
 	
@@ -39,7 +38,6 @@ public class EmployeeProjectDaoImpl extends AbstractDao<EmployeeProjectEntity, L
 	@Override
 	public List<EmployeeProjectEntity> findEmployeesWorkingInSpecificProjectForSpecificTime(long idProject,
 			int numberOfMonths) {
-		// TODO Auto-generated method stub
 		TypedQuery<EmployeeProjectEntity> query = entityManager.
 				createNamedQuery("findEmployeesWorkingInSpecificProjectForSpecificTime", EmployeeProjectEntity.class);
 		query.setParameter("number_of_months", numberOfMonths);

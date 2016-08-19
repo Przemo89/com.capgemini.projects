@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,11 +28,14 @@ import com.capgemini.exceptions.EmployeeEntityNotExistException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional
+//@Transactional
 public class EmployeeServiceTest {
 	
 	@Autowired
 	private EmployeeService employeeService;
+	
+	@Autowired
+	private EntityManager entityManager;
 	
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -121,7 +127,7 @@ public class EmployeeServiceTest {
     	final String lastName = "Bob2";
     	final String pin = "33333553333";
     	final Date birthDate = new Date(1968-03-30);
-    	final String email = "ran23om@random.com";
+    	final String email = "ran23om@randfom.com";
     	final String phoneHomeNumber = "713544779";
     	final String phoneWorkNumber = "772345490";
     	EmployeeEntity employeeToBeSaved = new EmployeeEntity(departament, 
@@ -149,24 +155,6 @@ public class EmployeeServiceTest {
 		
 		// then
 		employeeService.saveEmployee(employeeExisting);
-    }
-    
-    @Test
-    public void testShouldThrowAnotherExceptionWhenSaveEmployee() throws Exception {
-		// given
-		final long idEmployeeThatExist = 9L;
-		EmployeeEntity employeeExisting = employeeService.findEmployeeById(idEmployeeThatExist);
-		EmployeeEntity employee = new EmployeeEntity();
-		employee.setPin(employeeExisting.getPin());
-		employee.setFirstName(employeeExisting.getFirstName());
-		employee.setLastName(employeeExisting.getLastName());
-		
-		// when
-		thrown.expect(EmployeeEntityExistsException.class);
-		thrown.expectMessage("Employee entity cannot be saved, because it already exists!");
-		
-		// then
-		employeeService.saveEmployee(employee);
     }
     
 	@Test
@@ -252,6 +240,29 @@ public class EmployeeServiceTest {
 		
 		// then
 		employeeService.deleteEmployee(employeeThatIsManagingProject);
+	}
+	
+	@Test
+	@Transactional
+	public void testShouldThrowsOptimisticLockExceptionWhenSimultaneoslyUpdatingSameRecord() throws Exception {
+		// given
+		final long idEmployeeToBeUpdatedTwice = 5L;
+		EmployeeEntity employeeFirstTime = employeeService.findEmployeeById(idEmployeeToBeUpdatedTwice);
+		entityManager.detach(employeeFirstTime);
+		employeeFirstTime.setFirstName("Ranasfiofh");
+
+		EmployeeEntity employeeSecondTime = employeeService.findEmployeeById(idEmployeeToBeUpdatedTwice);
+		entityManager.detach(employeeSecondTime);
+		employeeSecondTime.setFirstName("sdfgjkhfdgjkhdfgjk");
+
+		employeeFirstTime = entityManager.merge(employeeFirstTime);
+		entityManager.flush();
+
+		// then
+		thrown.expect(OptimisticLockException.class);
+		
+		// when
+		entityManager.merge(employeeSecondTime);
 	}
 
 }
