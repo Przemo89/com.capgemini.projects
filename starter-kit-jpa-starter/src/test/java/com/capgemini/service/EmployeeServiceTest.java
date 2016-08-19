@@ -245,7 +245,6 @@ public class EmployeeServiceTest {
 	}
 	
 	@Test
-	@Transactional
 	public void testShouldThrowsOptimisticLockExceptionWhenSimultaneoslyUpdatingSameRecord() throws Exception {
 		// given
 		final long idEmployeeToBeUpdatedTwice = 5L;
