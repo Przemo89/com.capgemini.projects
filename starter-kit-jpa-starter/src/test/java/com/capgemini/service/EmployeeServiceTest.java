@@ -28,7 +28,7 @@ import com.capgemini.exceptions.EmployeeEntityNotExistException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@Transactional
+@Transactional
 public class EmployeeServiceTest {
 	
 	@Autowired
@@ -36,6 +36,9 @@ public class EmployeeServiceTest {
 	
 	@Autowired
 	private EntityManager entityManager;
+	
+	@Autowired
+	private DepartamentService departamentService;
 	
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -120,9 +123,8 @@ public class EmployeeServiceTest {
     @Test
     public void testShouldSaveEmployee() throws Exception {
     	// given
-    	final DepartamentEntity departament = new DepartamentEntity();
     	final long idDepartament = 3L;
-    	departament.setId(idDepartament);
+    	DepartamentEntity departament = departamentService.findDepartamentById(idDepartament);
     	final String firstName = "Bob";
     	final String lastName = "Bob2";
     	final String pin = "33333553333";

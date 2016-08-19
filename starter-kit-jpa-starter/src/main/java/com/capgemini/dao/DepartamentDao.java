@@ -1,5 +1,8 @@
 package com.capgemini.dao;
 
-public class DepartamentDao {
+import com.capgemini.domain.DepartamentEntity;
+
+public interface DepartamentDao extends Dao<DepartamentEntity, Long> {
+	
 
 }
