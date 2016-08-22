@@ -1,5 +1,6 @@
 package com.capgemini.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.capgemini.dao.EmployeeProjectDao;
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.domain.EmployeeProjectEntity;
-import com.capgemini.exceptions.EmployeeProjectEntityExistsException;
+import com.capgemini.exceptions.EmployeeProjectEntityDataIntegrityViolationException;
 import com.capgemini.exceptions.EmployeeProjectEntityNotExistsException;
 import com.capgemini.service.EmployeeProjectService;
 
@@ -41,12 +42,30 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
 	
 	@Override
 	public EmployeeProjectEntity saveEmployeeProject(EmployeeProjectEntity employeeProject)
-			throws EmployeeProjectEntityExistsException {
+			throws EmployeeProjectEntityDataIntegrityViolationException {
 		// TODO Auto-generated method stub
-		if (employeeProjectRepository.exists(employeeProject.getId())) {
-			throw new EmployeeProjectEntityExistsException();
+		isHireDateAndSalaryValid(employeeProject);
+		isEmployeeProjectAlreadyExists(employeeProject);
+		return employeeProjectRepository.save(employeeProject);
+	}
+
+	private void isEmployeeProjectAlreadyExists(EmployeeProjectEntity employeeProject)
+			throws EmployeeProjectEntityDataIntegrityViolationException {
+		if (employeeProjectRepository.findOne(employeeProject.getId()) != null) {
+			throw new EmployeeProjectEntityDataIntegrityViolationException(
+					"Employee participation in specified project with id = "+ employeeProject.getId()
+					+ " already exists and therefore cannot be added!");
 		}
-		return null;
+	}
+
+	private void isHireDateAndSalaryValid(EmployeeProjectEntity employeeProject)
+			throws EmployeeProjectEntityDataIntegrityViolationException {
+		if (employeeProject.getTerminationDate() != null && employeeProject.getHireDate().after(employeeProject.getTerminationDate())) {
+			throw new EmployeeProjectEntityDataIntegrityViolationException("Hire date cannot be before termination date!");
+		}
+		if (employeeProject.getSalary().compareTo(new BigDecimal(0)) < 0) {
+			throw new EmployeeProjectEntityDataIntegrityViolationException("Daily salary cannot be less than 0.");
+		}
 	}
 
 	@Override
@@ -63,7 +82,6 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
 	@Override
 	public List<EmployeeEntity> findEmployeesWorkingInSpecificProjectForSpecificTimeInHql(long idProject,
 			int numberOfMonths) {
-		// TODO Auto-generated method stub
 		return employeeProjectRepository.findEmployeesWorkingInSpecificProjectForSpecificTimeInHql(idProject, numberOfMonths);
 	}
 }

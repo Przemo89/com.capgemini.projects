@@ -57,15 +57,11 @@ public abstract class AbstractVersionControlEntity {
 	}
 	
 	private void setCreateDateBeforeSave() {
-		if (this.createDate == null) {
-			this.createDate = new Date();
-		}
+		this.createDate = new Date();
 	}
 	
 	private void setLastModifiedDateBeforeSave() {
-		if (this.lastModifiedDate == null) {
-			this.lastModifiedDate = new Date();
-		}
+		this.lastModifiedDate = new Date();
 	}
 	
 	@PreUpdate

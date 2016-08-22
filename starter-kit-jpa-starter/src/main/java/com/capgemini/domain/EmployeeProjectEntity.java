@@ -53,7 +53,7 @@ public class EmployeeProjectEntity extends AbstractVersionControlEntity implemen
 	@Column(name = "daily_salary", nullable = false, precision = 10, scale = 2)
 	private BigDecimal salary;
 
-	protected EmployeeProjectEntity() {
+	public EmployeeProjectEntity() {
 		
 	}
 	
