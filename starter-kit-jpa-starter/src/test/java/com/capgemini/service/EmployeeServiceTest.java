@@ -24,8 +24,6 @@ import com.capgemini.domain.ContactDetails;
 import com.capgemini.domain.DepartamentEntity;
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.exceptions.EmployeeEntityDataIntegrityViolationException;
-import com.capgemini.exceptions.EmployeeEntityIsManagerOfProjectException;
-import com.capgemini.exceptions.EmployeeEntityNotExistException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -319,6 +317,7 @@ public class EmployeeServiceTest {
 		// given
 		final long idEmployeeToBeDeleted = 11L;
 		EmployeeEntity employee = employeeService.findEmployeeById(idEmployeeToBeDeleted);
+		entityManager.detach(employee);
 
 		// when
 		employeeService.deleteEmployee(employee);
@@ -329,16 +328,17 @@ public class EmployeeServiceTest {
 	
 	@Transactional
 	@Test
-	public void testShouldThrowExceptionWhenDeleteEmployee() throws Exception {
+	public void testShouldThrowExceptionWhenDeleteEmployeeWhoNotExists() throws Exception {
 		// given
 		final long idEmployeeThatExist = 14L;
 		final long idEmployeeThatNotExist = 78L;
 		EmployeeEntity employeeExisting = employeeService.findEmployeeById(idEmployeeThatExist);
+		entityManager.detach(employeeExisting);
 		employeeExisting.setId(idEmployeeThatNotExist);
 		
 		// when
-		thrown.expect(EmployeeEntityNotExistException.class);
-		thrown.expectMessage("Employee with id = " + idEmployeeThatNotExist + " does not exist!");
+		thrown.expect(EmployeeEntityDataIntegrityViolationException.class);
+		thrown.expectMessage(" does not exist and therefore cannot be deleted!");
 		
 		// then
 		employeeService.deleteEmployee(employeeExisting);
@@ -346,14 +346,14 @@ public class EmployeeServiceTest {
 	
 	@Transactional
 	@Test
-	public void testShouldThrowAnotherExceptionWhenDeleteEmployee() throws Exception {
+	public void testShouldThrowExceptionWhenDeleteEmployeeWhichIsManagingProject() throws Exception {
 		// given
 		final long idEmployeeThatIsManagingProject = 12L;
 		EmployeeEntity employeeThatIsManagingProject = employeeService.findEmployeeById(idEmployeeThatIsManagingProject);
 		
 		// when
-		thrown.expect(EmployeeEntityIsManagerOfProjectException.class);
-		thrown.expectMessage("Change project's manager and then try again.");
+		thrown.expect(EmployeeEntityDataIntegrityViolationException.class);
+		thrown.expectMessage("Change project's manager first and then remove this employee.");
 		
 		// then
 		employeeService.deleteEmployee(employeeThatIsManagingProject);

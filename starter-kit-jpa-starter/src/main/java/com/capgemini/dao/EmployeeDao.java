@@ -27,16 +27,7 @@ public interface EmployeeDao extends Dao<EmployeeEntity, Long> {
 	 */
 	List<EmployeeEntity> findEmployeesWithSameIdPinEmailAndPhones(EmployeeEntity employee);
 	
-	/**Very similar method in comparison to the @findEmployeesWithSameIdPinEmailAndPhones.
-	 * However, this method does not retrieve EmployeeEntity, which has the same id, as provided
-	 * EmployeeEntity to be updated. Therefore this method retrieves from database any employee, 
-	 * which has the same PIN, Email or Phones' numbers before update of some already existing Employee.
-	 * Thanks to this, proper exception might be thrown and possible repetitions of listed unique fields 
-	 * will be caught in the service layer.
-	 * @param employee - the one, which is supposed to be updated in DB.
-	 * @return list of Employees, which meet criteria. If list is empty, everything is ok.
-	 */
-	List<EmployeeEntity> findEmployeesWithSamePinEmailAndPhones(EmployeeEntity employee);
+	List<EmployeeEntity> findEmployeeManagerOfDepartamentAndEmployeeById(long idEmployee);
 	
 	void deleteEmployee(EmployeeEntity employee);
 

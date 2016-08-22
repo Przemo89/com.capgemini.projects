@@ -13,6 +13,17 @@ import com.capgemini.domain.ProjectEntity;
 public class ProjectDaoImpl extends AbstractDao<ProjectEntity, Long> implements ProjectDao {
 
 	@Override
+	public List<ProjectEntity> findProjectsByIdAndName(ProjectEntity project) {
+		// TODO Auto-generated method stub
+		TypedQuery<ProjectEntity> query = entityManager.createQuery(
+				"select project from ProjectEntity project where id = :id "
+				+ "or name = :name", ProjectEntity.class);
+		query.setParameter("id", project.getId());
+		query.setParameter("name", project.getName());
+		return query.getResultList();
+	}
+
+	@Override
 	public void deleteProject(ProjectEntity project) {
 		project = entityManager.merge(project);
 		entityManager.remove(project);
@@ -25,5 +36,4 @@ public class ProjectDaoImpl extends AbstractDao<ProjectEntity, Long> implements 
 		query.setParameter("id_manager", idManager);
 		return query.getResultList();
 	}
-	
 }

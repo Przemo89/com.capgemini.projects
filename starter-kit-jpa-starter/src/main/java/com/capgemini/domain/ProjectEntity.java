@@ -28,7 +28,7 @@ public class ProjectEntity extends AbstractVersionControlEntity implements Seria
 	private long id;
 	
 	@OneToOne
-	@JoinColumn(name = "id_manager", nullable = true)
+	@JoinColumn(name = "id_manager", nullable = false)
 	private EmployeeEntity manager;
 	
 	@Column(name = "name", nullable = false, unique = true, length = 255)

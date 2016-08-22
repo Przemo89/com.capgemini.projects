@@ -32,31 +32,17 @@ public class EmployeeDaoImpl extends AbstractDao<EmployeeEntity, Long> implement
 		query.setParameter("email", employee.getContactDetails().getEmail());
 		query.setParameter("phone_stationary", employee.getContactDetails().getPhoneStationaryNumber());
 		query.setParameter("phone_mobile", employee.getContactDetails().getPhoneMobileNumber());
-		// TODO Auto-generated method stub
 		return query.getResultList();
 	}
 	
-	/**Very similar method in comparison to the @findEmployeesWithSameIdPinEmailAndPhones.
-	 * However, this method does not retrieve EmployeeEntity, which has the same id, as provided
-	 * EmployeeEntity to be updated. Therefore this method retrieves from database any employee, 
-	 * which has the same PIN, Email or Phones' numbers before update of some already existing Employee.
-	 * Thanks to this, proper exception might be thrown and possible repetitions of listed unique fields 
-	 * will be caught in the service layer.
-	 * @param employee - the one, which is supposed to be updated in DB.
-	 * @return list of Employees, which meet criteria. If list is empty, everything is ok.
-	 */
 	@Override
-	public List<EmployeeEntity> findEmployeesWithSamePinEmailAndPhones(EmployeeEntity employee) {
-		TypedQuery<EmployeeEntity> query = entityManager.createQuery( 
-				"select e from EmployeeEntity e "
-				+ "where id = :id OR pin = :pin OR email = :email "
-				+ "OR phone_stationary = :phone_stationary OR phone_mobile = :phone_mobile", EmployeeEntity.class);
-		query.setParameter("id", employee.getId());
-		query.setParameter("pin", employee.getPin());
-		query.setParameter("email", employee.getContactDetails().getEmail());
-		query.setParameter("phone_stationary", employee.getContactDetails().getPhoneStationaryNumber());
-		query.setParameter("phone_mobile", employee.getContactDetails().getPhoneMobileNumber());
+	public List<EmployeeEntity> findEmployeeManagerOfDepartamentAndEmployeeById(long idEmployee) {
 		// TODO Auto-generated method stub
+		TypedQuery<EmployeeEntity> query = entityManager.createQuery(
+				"select e from EmployeeEntity e "
+				+ " left join e.project p "
+				+ "where e.id = :id or id_manager = :id", EmployeeEntity.class);
+		query.setParameter("id", idEmployee);
 		return query.getResultList();
 	}
 

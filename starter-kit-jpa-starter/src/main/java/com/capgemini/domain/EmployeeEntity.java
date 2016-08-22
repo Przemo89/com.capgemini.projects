@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -45,6 +46,9 @@ public class EmployeeEntity extends AbstractVersionControlEntity implements Seri
 	@ManyToOne
 	@JoinColumn(name = "id_departament")
 	private DepartamentEntity departament;
+	
+	@OneToOne(mappedBy = "manager", fetch = FetchType.LAZY, optional = true)
+	private ProjectEntity project;
 
 	@Column(name = "first_name", nullable = false, length = 45)
 	private String firstName;
@@ -130,4 +134,11 @@ public class EmployeeEntity extends AbstractVersionControlEntity implements Seri
 		this.contactDetails = contactDetails;
 	}
 	
+	public ProjectEntity getProject() {
+		return project;
+	}
+
+	public void setProject(ProjectEntity project) {
+		this.project = project;
+	}
 }
