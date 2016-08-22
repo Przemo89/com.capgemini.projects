@@ -135,8 +135,8 @@ public class EmployeeServiceTest {
     	final String phoneWorkNumber = "772345490";
     	final ContactDetails contactDetails = new ContactDetails();
     	contactDetails.setEmail(email);
-    	contactDetails.setPhoneHomeNumber(phoneHomeNumber);
-    	contactDetails.setPhoneWorkNumber(phoneWorkNumber);
+    	contactDetails.setPhoneStationaryNumber(phoneHomeNumber);
+    	contactDetails.setPhoneMobileNumber(phoneWorkNumber);
     	EmployeeEntity employeeToBeSaved = new EmployeeEntity();
     	employeeToBeSaved.setDepartament(departament);
     	employeeToBeSaved.setFirstName(firstName);
@@ -255,7 +255,7 @@ public class EmployeeServiceTest {
 	}
 	
 	@Test
-	public void testShouldThrowsOptimisticLockExceptionWhenSimultaneoslyUpdatingSameRecord() throws Exception {
+	public void testShouldThrowOptimisticLockExceptionWhenSimultaneoslyUpdatingSameRecord() throws Exception {
 		// given
 		final long idEmployeeToBeUpdatedTwice = 5L;
 		EmployeeEntity employeeFirstTime = employeeService.findEmployeeById(idEmployeeToBeUpdatedTwice);

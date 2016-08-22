@@ -3,6 +3,7 @@ package com.capgemini.service;
 import java.util.List;
 
 import com.capgemini.domain.EmployeeEntity;
+import com.capgemini.exceptions.EmployeeEntityDataIntegrityViolationException;
 import com.capgemini.exceptions.EmployeeEntityExistsException;
 import com.capgemini.exceptions.EmployeeEntityIsManagerOfProjectException;
 import com.capgemini.exceptions.EmployeeEntityNotExistException;
@@ -13,7 +14,8 @@ public interface EmployeeService {
 	
 	void deleteEmployee(EmployeeEntity employee) throws EmployeeEntityNotExistException, EmployeeEntityIsManagerOfProjectException;
 	
-	EmployeeEntity updateEmployee(EmployeeEntity employee) throws EmployeeEntityNotExistException;
+	EmployeeEntity updateEmployee(EmployeeEntity employee) 
+			throws EmployeeEntityNotExistException, EmployeeEntityDataIntegrityViolationException;
 	
 	int setEmployeeDepartament(Long idEmployee, Long idDepartament) throws EmployeeEntityNotExistException;
 	

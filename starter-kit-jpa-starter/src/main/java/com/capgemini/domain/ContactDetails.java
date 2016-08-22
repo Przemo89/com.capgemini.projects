@@ -25,19 +25,19 @@ public class ContactDetails {
 		this.email = email;
 	}
 
-	public String getPhoneHomeNumber() {
+	public String getPhoneStationaryNumber() {
 		return phoneStationaryNumber;
 	}
 
-	public void setPhoneHomeNumber(String phoneStationaryNumber) {
+	public void setPhoneStationaryNumber(String phoneStationaryNumber) {
 		this.phoneStationaryNumber = phoneStationaryNumber;
 	}
 
-	public String getPhoneWorkNumber() {
+	public String getPhoneMobileNumber() {
 		return phoneMobileNumber;
 	}
 
-	public void setPhoneWorkNumber(String phoneMobileNumber) {
+	public void setPhoneMobileNumber(String phoneMobileNumber) {
 		this.phoneMobileNumber = phoneMobileNumber;
 	}
 }

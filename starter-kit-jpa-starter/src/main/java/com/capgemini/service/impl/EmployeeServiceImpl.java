@@ -3,7 +3,6 @@ package com.capgemini.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +10,7 @@ import com.capgemini.dao.EmployeeDao;
 import com.capgemini.dao.ProjectDao;
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.domain.ProjectEntity;
+import com.capgemini.exceptions.EmployeeEntityDataIntegrityViolationException;
 import com.capgemini.exceptions.EmployeeEntityExistsException;
 import com.capgemini.exceptions.EmployeeEntityIsManagerOfProjectException;
 import com.capgemini.exceptions.EmployeeEntityNotExistException;
@@ -51,13 +51,38 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public EmployeeEntity updateEmployee(EmployeeEntity employee) throws EmployeeEntityNotExistException {
+	public EmployeeEntity updateEmployee(EmployeeEntity employee) 
+			throws EmployeeEntityNotExistException, EmployeeEntityDataIntegrityViolationException {
 //		if (employeeRepository.findOne(employee.getId()) == null) {
 //			throw new EmployeeEntityNotExistException(employee.getId());
 //		}
 //		if (employee.get)
-		return employeeRepository.update(employee);
+		
+		List<EmployeeEntity> employeesWithSameFields = employeeRepository.findEmployeesWithSameIdPinEmailAndPhones(employee);
+		EmployeeEntity employeeUpdated = new EmployeeEntity();
+		if (employeesWithSameFields.isEmpty()) {
+			throw new EmployeeEntityDataIntegrityViolationException("Employee with id = " + employee.getId() + 
+					" does not exist and therefore cannot be updated!");
+//			isEmployeeToBeSavedOrUpdatedViolatesConstraints(employeesWithSameFields, employee);
+		}
+		try {
+			employeeUpdated = employeeRepository.update(employee);
+		} catch (Exception e) {
+			//TODO find this exception which might be throwed and throw yours
+		}
+		return employeeUpdated;
 	}
+	
+	private void isEmployeeToBeSavedOrUpdatedViolatesConstraints(List<EmployeeEntity> employeesWithSameFields, EmployeeEntity employeeToBeChecked) 
+			throws EmployeeEntityNotExistException, EmployeeEntityDataIntegrityViolationException{
+		for (EmployeeEntity employee : employeesWithSameFields) {
+			if (employee.getId() == employeeToBeChecked.getId()) {
+//				throw new EmployeeEntityDataIntegrityViolationException(message)
+			}
+		}
+	}
+	
+	
 
 	@Override
 	@Transactional(readOnly = false)
