@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -54,27 +55,12 @@ public class EmployeeEntity extends AbstractVersionControlEntity implements Seri
 	@Temporal(TemporalType.DATE)
 	@Column(name = "birth_date", nullable = false)
 	private Date birthDate;
-	@Column(name = "email", nullable = false, length = 45, unique = true)
-	private String email;
-	@Column(name = "phone_stationary", nullable = false, length = 15, unique = true)
-	private String phoneHomeNumber;
-	@Column(name = "phone_mobile", nullable = false, length = 15, unique = true)
-	private String phoneWorkNumber;
+	
+	@Embedded
+	private ContactDetails contactDetails;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "employee")
 	private List<EmployeeProjectEntity> employeeProjects;
-
-	public EmployeeEntity(DepartamentEntity departament, String firstName, String lastName, String pin,
-			Date birthDate, String email, String phoneHomeNumber, String phoneWorkNumber) {
-		this.departament = departament;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.pin = pin;
-		this.birthDate = birthDate;
-		this.email = email;
-		this.phoneHomeNumber = phoneHomeNumber;
-		this.phoneWorkNumber = phoneWorkNumber;
-	}
 
 	public EmployeeEntity() {
 		
@@ -127,30 +113,6 @@ public class EmployeeEntity extends AbstractVersionControlEntity implements Seri
 	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
 	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPhoneHomeNumber() {
-		return phoneHomeNumber;
-	}
-
-	public void setPhoneHomeNumber(String phoneHomeNumber) {
-		this.phoneHomeNumber = phoneHomeNumber;
-	}
-
-	public String getPhoneWorkNumber() {
-		return phoneWorkNumber;
-	}
-
-	public void setPhoneWorkNumber(String phoneWorkNumber) {
-		this.phoneWorkNumber = phoneWorkNumber;
-	}
 	
 	public List<EmployeeProjectEntity> getEmployeeProjects() {
 		return employeeProjects;
@@ -160,63 +122,12 @@ public class EmployeeEntity extends AbstractVersionControlEntity implements Seri
 		this.employeeProjects = employeeProjects;
 	}
 	
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (this == obj)
-//			return true;
-//		if (obj == null)
-//			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
-//		EmployeeEntity other = (EmployeeEntity) obj;
-//		if (birthDate == null) {
-//			if (other.birthDate != null)
-//				return false;
-//		} else if (!birthDate.equals(other.birthDate))
-//			return false;
-//		if (departament == null) {
-//			if (other.departament != null)
-//				return false;
-//		} else if (!departament.equals(other.departament))
-//			return false;
-//		if (email == null) {
-//			if (other.email != null)
-//				return false;
-//		} else if (!email.equals(other.email))
-//			return false;
-////		if (employeeProjects == null) {
-////			if (other.employeeProjects != null)
-////				return false;
-////		} else if (!employeeProjects.equals(other.employeeProjects))
-////			return false;
-//		if (firstName == null) {
-//			if (other.firstName != null)
-//				return false;
-//		} else if (!firstName.equals(other.firstName))
-//			return false;
-//		if (id != other.id)
-//			return false;
-//		if (lastName == null) {
-//			if (other.lastName != null)
-//				return false;
-//		} else if (!lastName.equals(other.lastName))
-//			return false;
-//		if (phoneHomeNumber == null) {
-//			if (other.phoneHomeNumber != null)
-//				return false;
-//		} else if (!phoneHomeNumber.equals(other.phoneHomeNumber))
-//			return false;
-//		if (phoneWorkNumber == null) {
-//			if (other.phoneWorkNumber != null)
-//				return false;
-//		} else if (!phoneWorkNumber.equals(other.phoneWorkNumber))
-//			return false;
-//		if (pin == null) {
-//			if (other.pin != null)
-//				return false;
-//		} else if (!pin.equals(other.pin))
-//			return false;
-//		return true;
-//	}
+	public ContactDetails getContactDetails() {
+		return contactDetails;
+	}
+
+	public void setContactDetails(ContactDetails contactDetails) {
+		this.contactDetails = contactDetails;
+	}
 	
 }

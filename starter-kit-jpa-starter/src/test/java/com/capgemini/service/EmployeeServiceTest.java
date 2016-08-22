@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.capgemini.domain.ContactDetails;
 import com.capgemini.domain.DepartamentEntity;
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.exceptions.EmployeeEntityExistsException;
@@ -93,14 +94,14 @@ public class EmployeeServiceTest {
     	final String email = "random@random.com";
     	final String pin = "33333333333";
     	EmployeeEntity employeeToBeUpdated = employeeService.findEmployeeById(idEmployee);
-    	employeeToBeUpdated.setEmail(email);
+    	employeeToBeUpdated.getContactDetails().setEmail(email);
 		employeeToBeUpdated.setPin(pin);
 
 		// when
     	EmployeeEntity employeeUpdated = employeeService.updateEmployee(employeeToBeUpdated);
     	
     	// then
-    	assertEquals(email, employeeUpdated.getEmail());
+    	assertEquals(email, employeeUpdated.getContactDetails().getEmail());
     	assertEquals(pin, employeeUpdated.getPin());
     }
     
@@ -132,16 +133,25 @@ public class EmployeeServiceTest {
     	final String email = "ran23om@randfom.com";
     	final String phoneHomeNumber = "713544779";
     	final String phoneWorkNumber = "772345490";
-    	EmployeeEntity employeeToBeSaved = new EmployeeEntity(departament, 
-    			firstName, lastName, pin, birthDate, email, phoneHomeNumber, phoneWorkNumber);
-
+    	final ContactDetails contactDetails = new ContactDetails();
+    	contactDetails.setEmail(email);
+    	contactDetails.setPhoneHomeNumber(phoneHomeNumber);
+    	contactDetails.setPhoneWorkNumber(phoneWorkNumber);
+    	EmployeeEntity employeeToBeSaved = new EmployeeEntity();
+    	employeeToBeSaved.setDepartament(departament);
+    	employeeToBeSaved.setFirstName(firstName);
+    	employeeToBeSaved.setLastName(lastName);
+    	employeeToBeSaved.setPin(pin);
+    	employeeToBeSaved.setBirthDate(birthDate);
+    	employeeToBeSaved.setContactDetails(contactDetails);
+    	
 		// when
     	EmployeeEntity employeeSaved = employeeService.saveEmployee(employeeToBeSaved);
     	
     	// then
     	assertEquals(firstName, employeeSaved.getFirstName());
     	assertEquals(pin, employeeSaved.getPin());
-    	assertEquals(email, employeeSaved.getEmail());
+    	assertEquals(email, employeeSaved.getContactDetails().getEmail());
     	assertEquals(idDepartament, employeeSaved.getDepartament().getId());
     }
     

@@ -9,9 +9,9 @@ public class ContactDetails {
 	@Column(name = "email", nullable = false, length = 45, unique = true)
 	private String email;
 	@Column(name = "phone_stationary", nullable = false, length = 15, unique = true)
-	private String phoneHomeNumber;
+	private String phoneStationaryNumber;
 	@Column(name = "phone_mobile", nullable = false, length = 15, unique = true)
-	private String phoneWorkNumber;
+	private String phoneMobileNumber;
 
 	public ContactDetails() {
 		
@@ -26,18 +26,18 @@ public class ContactDetails {
 	}
 
 	public String getPhoneHomeNumber() {
-		return phoneHomeNumber;
+		return phoneStationaryNumber;
 	}
 
-	public void setPhoneHomeNumber(String phoneHomeNumber) {
-		this.phoneHomeNumber = phoneHomeNumber;
+	public void setPhoneHomeNumber(String phoneStationaryNumber) {
+		this.phoneStationaryNumber = phoneStationaryNumber;
 	}
 
 	public String getPhoneWorkNumber() {
-		return phoneWorkNumber;
+		return phoneMobileNumber;
 	}
 
-	public void setPhoneWorkNumber(String phoneWorkNumber) {
-		this.phoneWorkNumber = phoneWorkNumber;
+	public void setPhoneWorkNumber(String phoneMobileNumber) {
+		this.phoneMobileNumber = phoneMobileNumber;
 	}
 }
