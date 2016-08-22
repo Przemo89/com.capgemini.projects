@@ -28,6 +28,7 @@ import com.capgemini.exceptions.EmployeeEntityDataIntegrityViolationException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 public class EmployeeServiceTest {
 	
 	@Autowired
@@ -59,7 +60,6 @@ public class EmployeeServiceTest {
 		assertEquals(pin, employee.getPin());
 	}
 	
-	@Transactional
     @Test
     public void testShouldUpdateIdDepartamentOfEmployee() throws Exception {
     	// given
@@ -72,7 +72,6 @@ public class EmployeeServiceTest {
     	assertEquals(properNumberOfUpdatedEmployees, numberOfUpdatedEmployees);
     }
     
-	@Transactional
 	@Test
 	public void testShouldThrowExceptionWhenUpdateIdDepartamentOfEmployee() throws Exception {
 		// given
@@ -87,7 +86,6 @@ public class EmployeeServiceTest {
 		employeeService.setEmployeeDepartament(idEmployeeThatNotExist, idDepartamentThatExist);
 	}
 
-	@Transactional
 	@Test
     public void testShouldUpdateEmployee() throws Exception {
     	// given
@@ -106,7 +104,6 @@ public class EmployeeServiceTest {
     	assertEquals(pin, employeeUpdated.getPin());
     }
     
-	@Transactional
 	@Test
 	public void testShouldThrowExceptionWhenUpdateEmployeeWhoseIdNotInDB() throws Exception {
 		// given
@@ -134,7 +131,6 @@ public class EmployeeServiceTest {
 		employeeService.updateEmployee(employeeExisting);
 	}
 	
-	@Transactional
 	@Test
 	public void testShouldThrowExceptionWhenUpdateEmployeeWithSamePin() throws Exception {
 		// given
@@ -154,7 +150,6 @@ public class EmployeeServiceTest {
 		employeeService.updateEmployee(employeeExistingOne);
 	}
 	
-	@Transactional
 	@Test
 	public void testShouldThrowExceptionWhenUpdateEmployeeWithSameEmail() throws Exception {
 		// given
@@ -176,7 +171,6 @@ public class EmployeeServiceTest {
 		employeeService.updateEmployee(employeeExistingOne);
 	}
 	
-	@Transactional
 	@Test
 	public void testShouldThrowExceptionWhenUpdateEmployeeWithSamePhoneStationary() throws Exception {
 		// given
@@ -198,7 +192,6 @@ public class EmployeeServiceTest {
 		employeeService.updateEmployee(employeeExistingOne);
 	}
 	
-	@Transactional
 	@Test
 	public void testShouldThrowExceptionWhenUpdateEmployeeWithSamePhoneMobile() throws Exception {
 		// given
@@ -220,7 +213,6 @@ public class EmployeeServiceTest {
 		employeeService.updateEmployee(employeeExistingOne);
 	}
     
-	@Transactional
     @Test
     public void testShouldSaveEmployee() throws Exception {
     	// given
@@ -255,7 +247,6 @@ public class EmployeeServiceTest {
     	assertEquals(idDepartament, employeeSaved.getDepartament().getId());
     }
     
-	@Transactional
     @Test
     public void testShouldThrowExceptionWhenSaveEmployee() throws Exception {
 		// given
@@ -312,7 +303,6 @@ public class EmployeeServiceTest {
 		}
 	}
 	
-	@Transactional
 	@Test
 	public void testDeleteEmployee() throws Exception {
 		// given
@@ -327,7 +317,6 @@ public class EmployeeServiceTest {
 		Assert.assertNull(employeeService.findEmployeeById(idEmployeeToBeDeleted));
 	}
 	
-	@Transactional
 	@Test
 	public void testShouldThrowExceptionWhenDeleteEmployeeWhoNotExists() throws Exception {
 		// given
@@ -345,7 +334,6 @@ public class EmployeeServiceTest {
 		employeeService.deleteEmployee(employeeExisting);
 	}
 	
-	@Transactional
 	@Test
 	public void testShouldThrowExceptionWhenDeleteEmployeeWhichIsManagingProject() throws Exception {
 		// given
@@ -360,7 +348,6 @@ public class EmployeeServiceTest {
 		employeeService.deleteEmployee(employeeThatIsManagingProject);
 	}
 	
-	@Transactional
 	@Test
 	public void testShouldThrowOptimisticLockExceptionWhenSimultaneoslyUpdatingSameRecord() throws Exception {
 		// given
@@ -383,7 +370,6 @@ public class EmployeeServiceTest {
 		entityManager.merge(employeeSecondTime);
 	}
 	
-	@Transactional
 	@Test
 	public void testShouldUpdateLastModificationDateWhenUpdate() throws Exception {
 		// given
@@ -426,7 +412,6 @@ public class EmployeeServiceTest {
 		Assert.assertNotEquals(employeeSaved.getLastModifiedDate(), employeeUpdated.getLastModifiedDate());
 	}
 	
-	@Transactional
 	@Test
 	public void testShouldUpdateVersionWhenUpdate() throws Exception {
 		// given

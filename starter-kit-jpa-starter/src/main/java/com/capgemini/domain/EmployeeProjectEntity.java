@@ -57,17 +57,6 @@ public class EmployeeProjectEntity extends AbstractVersionControlEntity implemen
 		
 	}
 	
-	public EmployeeProjectEntity(long id, EmployeeEntity employee, ProjectEntity project, Date hireDate,
-			Date terminationDate, EmployeeFunction employeeFunction, BigDecimal salary) {
-		this.id = id;
-		this.employee = employee;
-		this.project = project;
-		this.hireDate = hireDate;
-		this.terminationDate = terminationDate;
-		this.employeeFunction = employeeFunction;
-		this.salary = salary;
-	}
-	
 	public long getId() {
 		return id;
 	}

@@ -30,8 +30,7 @@ query = "select e.*  "
 		+ "else timestampdiff(sql_tsi_month, ep.hire_date, ep.termination_date) > :number_of_months end "
 		+ "and ep.id_project = :id_project "
 		+ "group by e.id "
-		+ "order by e.id asc;",
-		resultClass= EmployeeEntity.class)
+		+ "order by e.id asc;", resultClass= EmployeeEntity.class)
 @Entity
 @Table(name = "employees")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)

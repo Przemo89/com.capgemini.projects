@@ -41,16 +41,6 @@ public class ProjectEntity extends AbstractVersionControlEntity implements Seria
 	private List<EmployeeProjectEntity> employeeProjects;
 	
 	public ProjectEntity() {
-		
-	}
-	
-	public ProjectEntity(long id, EmployeeEntity manager, String name, boolean isInternal,
-			List<EmployeeProjectEntity> employeeProjects) {
-		this.id = id;
-		this.manager = manager;
-		this.name = name;
-		this.isInternal = isInternal;
-		this.employeeProjects = employeeProjects;
 	}
 
 	public long getId() {
