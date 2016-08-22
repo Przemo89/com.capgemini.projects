@@ -14,6 +14,15 @@ import com.capgemini.domain.EmployeeEntity;
 public class EmployeeDaoImpl extends AbstractDao<EmployeeEntity, Long> implements EmployeeDao {
 
 	@Override
+	public List<EmployeeEntity> findEmployeesWithSamePinEmailAndPhones(EmployeeEntity employee) {
+		TypedQuery<EmployeeEntity> query = entityManager.createQuery( 
+				"select e from EmployeeEntity e "
+				+ "where id = :id OR ", EmployeeEntity.class);
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public void deleteEmployee(EmployeeEntity employee) {
 		employee = entityManager.merge(employee);
 		entityManager.remove(employee);

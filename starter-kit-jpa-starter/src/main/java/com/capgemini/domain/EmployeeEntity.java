@@ -15,11 +15,21 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+@NamedNativeQuery(name = "findEmployeesWorkingInSpecificProjectForSpecificTime",
+query = "select e.*  "
+		+ "from employees e left join employees_projects ep on e.id = ep.id_employee "
+		+ "where case when ep.termination_date is null then timestampdiff(sql_tsi_month, ep.hire_date, curdate()) > :number_of_months "
+		+ "else timestampdiff(sql_tsi_month, ep.hire_date, ep.termination_date) > :number_of_months end "
+		+ "and ep.id_project = :id_project "
+		+ "group by e.id "
+		+ "order by e.id asc;",
+		resultClass= EmployeeEntity.class)
 @Entity
 @Table(name = "employees")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -46,9 +56,9 @@ public class EmployeeEntity extends AbstractVersionControlEntity implements Seri
 	private Date birthDate;
 	@Column(name = "email", nullable = false, length = 45, unique = true)
 	private String email;
-	@Column(name = "phone_home", nullable = false, length = 15, unique = true)
+	@Column(name = "phone_stationary", nullable = false, length = 15, unique = true)
 	private String phoneHomeNumber;
-	@Column(name = "phone_work", nullable = false, length = 15, unique = true)
+	@Column(name = "phone_mobile", nullable = false, length = 15, unique = true)
 	private String phoneWorkNumber;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "employee")

@@ -50,9 +50,11 @@ public class ProjectServiceTest {
 		// given
 		final long idManager = 12L;
 		final long idOfProperResultProject = 5L;
+		
 		// when
 		List<ProjectEntity> projectsWithSpecifiedManager = projectService.findProjectByIdManager(idManager);
 		int resultSize = 1;
+		
 		// then
 		assertEquals(resultSize, projectsWithSpecifiedManager.size());
 		assertEquals(idOfProperResultProject, projectsWithSpecifiedManager.get(0).getId());

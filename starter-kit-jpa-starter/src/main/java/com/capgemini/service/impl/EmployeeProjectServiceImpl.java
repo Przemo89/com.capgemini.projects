@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.capgemini.dao.EmployeeProjectDao;
+import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.domain.EmployeeProjectEntity;
 import com.capgemini.exceptions.EmployeeProjectEntityExistsException;
 import com.capgemini.exceptions.EmployeeProjectEntityNotExistsException;
@@ -42,19 +43,21 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
 	public EmployeeProjectEntity saveEmployeeProject(EmployeeProjectEntity employeeProject)
 			throws EmployeeProjectEntityExistsException {
 		// TODO Auto-generated method stub
+		if (employeeProjectRepository.exists(employeeProject.getId())) {
+			throw new EmployeeProjectEntityExistsException();
+		}
 		return null;
 	}
 
 	@Override
-	public List<EmployeeProjectEntity> findEmployeesCurrentlyWorkingInSpecificProject(long idProject) {
+	public List<EmployeeEntity> findEmployeesCurrentlyWorkingInSpecificProject(long idProject) {
 		return employeeProjectRepository.findEmployeesCurrentlyWorkingInSpecificProject(idProject);
 	}
 
 	@Override
-	public List<EmployeeProjectEntity> findEmployeesWorkingInSpecificProjectForSpecificTime(long idProject,
+	public List<EmployeeEntity> findEmployeesWorkingInSpecificProjectForSpecificTime(long idProject,
 			int numberOfMonths) {
 		return employeeProjectRepository.findEmployeesWorkingInSpecificProjectForSpecificTime(idProject, numberOfMonths);
-		// TODO Auto-generated method stub
 	}
 
 	

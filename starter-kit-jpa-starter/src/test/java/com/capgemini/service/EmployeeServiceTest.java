@@ -28,7 +28,7 @@ import com.capgemini.exceptions.EmployeeEntityNotExistException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional
+//@Transactional
 public class EmployeeServiceTest {
 	
 	@Autowired

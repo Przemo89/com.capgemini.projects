@@ -14,20 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.capgemini.enumerations.EmployeeFunction;
 
-@NamedNativeQuery(name = "findEmployeesWorkingInSpecificProjectForSpecificTime",
-		query = "select * from employees_projects ep left join employees e on ep.id_employee = e.id "
-				+ "where case when ep.termination_date is null then timestampdiff(month, ep.hire_date, curdate()) > :number_of_months "
-				+ "else timestampdiff(month, ep.hire_date, ep.termination_date) > :number_of_months end "
-				+ "and ep.id_project = :id_project "
-				+ "group by ep.id_employee;",
-				resultClass= EmployeeProjectEntity.class)
 @Entity
 @Table(name = "employees_projects")
 public class EmployeeProjectEntity extends AbstractVersionControlEntity implements Serializable {

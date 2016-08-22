@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.domain.EmployeeProjectEntity;
 
 
@@ -71,12 +72,13 @@ public class EmployeeProjectServiceTest {
 		final long idEmployeeTwo = 13L;
 		
 		// when
-		List<EmployeeProjectEntity> resultList = employeeProjectService.findEmployeesCurrentlyWorkingInSpecificProject(idProjectExisting);
+		List<EmployeeEntity> resultList = 
+				employeeProjectService.findEmployeesCurrentlyWorkingInSpecificProject(idProjectExisting);
 		
 		// then
 		Assert.assertEquals(properResultListSize, resultList.size());
-		Assert.assertEquals(idEmployeeOne, resultList.get(0).getEmployee().getId());
-		Assert.assertEquals(idEmployeeTwo, resultList.get(1).getEmployee().getId());
+		Assert.assertEquals(idEmployeeOne, resultList.get(0).getId());
+		Assert.assertEquals(idEmployeeTwo, resultList.get(1).getId());
 	}
 	
 	@Test
@@ -91,14 +93,14 @@ public class EmployeeProjectServiceTest {
 		final long idEmployeeFour = 13L;
 		
 		// when
-		List<EmployeeProjectEntity> resultList = employeeProjectService.
+		List<EmployeeEntity> resultList = employeeProjectService.
 				findEmployeesWorkingInSpecificProjectForSpecificTime(idProjectExisting, numberOfMonths);;
 		
 		// then
 		Assert.assertEquals(properResultListSize, resultList.size());
-		Assert.assertEquals(idEmployeeOne, resultList.get(0).getEmployee().getId());
-		Assert.assertEquals(idEmployeeTwo, resultList.get(1).getEmployee().getId());
-		Assert.assertEquals(idEmployeeThree, resultList.get(2).getEmployee().getId());
-		Assert.assertEquals(idEmployeeFour, resultList.get(3).getEmployee().getId());
+		Assert.assertEquals(idEmployeeOne, resultList.get(0).getId());
+		Assert.assertEquals(idEmployeeTwo, resultList.get(1).getId());
+		Assert.assertEquals(idEmployeeThree, resultList.get(2).getId());
+		Assert.assertEquals(idEmployeeFour, resultList.get(3).getId());
 	}
 }

@@ -17,7 +17,6 @@ public class DepartamentServiceImpl implements DepartamentService {
 	
 	@Override
 	public DepartamentEntity findDepartamentById(long idDepartament) {
-		// TODO Auto-generated method stub
 		return departamentRepository.findOne(idDepartament);
 	}
 
