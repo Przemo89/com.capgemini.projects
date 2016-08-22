@@ -15,9 +15,10 @@ public abstract class AbstractVersionControlEntity {
 
 	@Version
 	@Column(name = "version", columnDefinition = "Integer DEFAULT 1", nullable = false)
-	private Integer version;
+	private Integer version = 1;
 	
-	@Column(name = "record_creation_date", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false, unique = false, updatable = false)
+	@Column(name = "record_creation_date", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", 
+			nullable = false, unique = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate;
 	
@@ -53,7 +54,6 @@ public abstract class AbstractVersionControlEntity {
 	public void setDatesAndVersionBeforeSave() {
 		setCreateDateBeforeSave();
 		setLastModifiedDateBeforeSave();
-		setVersionBeforeSave();
 	}
 	
 	private void setCreateDateBeforeSave() {
@@ -68,16 +68,8 @@ public abstract class AbstractVersionControlEntity {
 		}
 	}
 	
-	private void setVersionBeforeSave() {
-		this.version = 1;
-	}
-	
 	@PreUpdate
 	public void setLastModifiedDateBeforeUpdate() {
 		this.lastModifiedDate = new Date();
 	}
-	
-//	private void 
-	
-	
 }

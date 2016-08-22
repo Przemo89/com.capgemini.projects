@@ -23,13 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.capgemini.domain.ContactDetails;
 import com.capgemini.domain.DepartamentEntity;
 import com.capgemini.domain.EmployeeEntity;
-import com.capgemini.exceptions.EmployeeEntityExistsException;
+import com.capgemini.exceptions.EmployeeEntityDataIntegrityViolationException;
 import com.capgemini.exceptions.EmployeeEntityIsManagerOfProjectException;
 import com.capgemini.exceptions.EmployeeEntityNotExistException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@Transactional
 public class EmployeeServiceTest {
 	
 	@Autowired
@@ -61,6 +60,7 @@ public class EmployeeServiceTest {
 		assertEquals(pin, employee.getPin());
 	}
 	
+	@Transactional
     @Test
     public void testShouldUpdateIdDepartamentOfEmployee() throws Exception {
     	// given
@@ -73,6 +73,7 @@ public class EmployeeServiceTest {
     	assertEquals(properNumberOfUpdatedEmployees, numberOfUpdatedEmployees);
     }
     
+	@Transactional
 	@Test
 	public void testShouldThrowExceptionWhenUpdateIdDepartamentOfEmployee() throws Exception {
 		// given
@@ -80,13 +81,14 @@ public class EmployeeServiceTest {
 		final long idEmployeeThatNotExist = 91L;
 		
 		// when
-		thrown.expect(EmployeeEntityNotExistException.class);
-		thrown.expectMessage("Employee with id = " + idEmployeeThatNotExist + " does not exist!");
+		thrown.expect(EmployeeEntityDataIntegrityViolationException.class);
+		thrown.expectMessage(" does not exist and therefore cannot be updated!");
 		
 		// then
 		employeeService.setEmployeeDepartament(idEmployeeThatNotExist, idDepartamentThatExist);
 	}
 
+	@Transactional
 	@Test
     public void testShouldUpdateEmployee() throws Exception {
     	// given
@@ -105,22 +107,121 @@ public class EmployeeServiceTest {
     	assertEquals(pin, employeeUpdated.getPin());
     }
     
+	@Transactional
 	@Test
-	public void testShouldThrowExceptionWhenUpdateEmployee() throws Exception {
+	public void testShouldThrowExceptionWhenUpdateEmployeeWhoseIdNotInDB() throws Exception {
 		// given
 		final long idEmployeeThatExist = 10L;
 		final long idEmployeeThatNotExist = 79L;
+    	final String pin = "33333553333";
+    	final String email = "ran23om@randfom.com";
+    	final String phoneHomeNumber = "713544779";
+    	final String phoneWorkNumber = "772345490";
+    	final ContactDetails contactDetails = new ContactDetails();
+    	contactDetails.setEmail(email);
+    	contactDetails.setPhoneStationaryNumber(phoneHomeNumber);
+    	contactDetails.setPhoneMobileNumber(phoneWorkNumber);
 		EmployeeEntity employeeExisting = employeeService.findEmployeeById(idEmployeeThatExist);
+		entityManager.detach(employeeExisting);
 		employeeExisting.setId(idEmployeeThatNotExist);
+		employeeExisting.setPin(pin);
+		employeeExisting.setContactDetails(contactDetails);
 		
 		// when
-		thrown.expect(EmployeeEntityNotExistException.class);
-		thrown.expectMessage("Employee with id = " + idEmployeeThatNotExist + " does not exist!");
+		thrown.expect(EmployeeEntityDataIntegrityViolationException.class);
+		thrown.expectMessage(" does not exist and therefore cannot be updated!");
 		
 		// then
 		employeeService.updateEmployee(employeeExisting);
 	}
+	
+	@Transactional
+	@Test
+	public void testShouldThrowExceptionWhenUpdateEmployeeWithSamePin() throws Exception {
+		// given
+		final long idEmployeeThatExistOne = 10L;
+		final long idEmployeeThatExistTwo = 12L;
+		EmployeeEntity employeeExistingOne = employeeService.findEmployeeById(idEmployeeThatExistOne);
+		entityManager.detach(employeeExistingOne);
+		EmployeeEntity employeeExistingTwo = employeeService.findEmployeeById(idEmployeeThatExistTwo);
+		entityManager.detach(employeeExistingTwo);
+		employeeExistingOne.setPin(employeeExistingTwo.getPin());
+		
+		// when
+		thrown.expect(EmployeeEntityDataIntegrityViolationException.class);
+		thrown.expectMessage("Please provide proper PIN or correct existing employee's.");
+		
+		// then
+		employeeService.updateEmployee(employeeExistingOne);
+	}
+	
+	@Transactional
+	@Test
+	public void testShouldThrowExceptionWhenUpdateEmployeeWithSameEmail() throws Exception {
+		// given
+		final long idEmployeeThatExistOne = 10L;
+		final long idEmployeeThatExistTwo = 12L;
+		EmployeeEntity employeeExistingOne = employeeService.findEmployeeById(idEmployeeThatExistOne);
+		entityManager.detach(employeeExistingOne);
+		EmployeeEntity employeeExistingTwo = employeeService.findEmployeeById(idEmployeeThatExistTwo);
+		entityManager.detach(employeeExistingTwo);
+		ContactDetails contactDetails = employeeExistingOne.getContactDetails();
+		contactDetails.setEmail(employeeExistingTwo.getContactDetails().getEmail());
+		employeeExistingOne.setContactDetails(contactDetails);
+		
+		// when
+		thrown.expect(EmployeeEntityDataIntegrityViolationException.class);
+		thrown.expectMessage("Provided employee's email is the same as employee with id = ");
+		
+		// then
+		employeeService.updateEmployee(employeeExistingOne);
+	}
+	
+	@Transactional
+	@Test
+	public void testShouldThrowExceptionWhenUpdateEmployeeWithSamePhoneStationary() throws Exception {
+		// given
+		final long idEmployeeThatExistOne = 10L;
+		final long idEmployeeThatExistTwo = 12L;
+		EmployeeEntity employeeExistingOne = employeeService.findEmployeeById(idEmployeeThatExistOne);
+		entityManager.detach(employeeExistingOne);
+		EmployeeEntity employeeExistingTwo = employeeService.findEmployeeById(idEmployeeThatExistTwo);
+		entityManager.detach(employeeExistingTwo);
+		ContactDetails contactDetails = employeeExistingOne.getContactDetails();
+		contactDetails.setPhoneStationaryNumber(employeeExistingTwo.getContactDetails().getPhoneStationaryNumber());
+		employeeExistingOne.setContactDetails(contactDetails);
+		
+		// when
+		thrown.expect(EmployeeEntityDataIntegrityViolationException.class);
+		thrown.expectMessage("Provided employee's stationary phone number is the same as employee with id =");
+		
+		// then
+		employeeService.updateEmployee(employeeExistingOne);
+	}
+	
+	@Transactional
+	@Test
+	public void testShouldThrowExceptionWhenUpdateEmployeeWithSamePhoneMobile() throws Exception {
+		// given
+		final long idEmployeeThatExistOne = 10L;
+		final long idEmployeeThatExistTwo = 12L;
+		EmployeeEntity employeeExistingOne = employeeService.findEmployeeById(idEmployeeThatExistOne);
+		entityManager.detach(employeeExistingOne);
+		EmployeeEntity employeeExistingTwo = employeeService.findEmployeeById(idEmployeeThatExistTwo);
+		entityManager.detach(employeeExistingTwo);
+		ContactDetails contactDetails = employeeExistingOne.getContactDetails();
+		contactDetails.setPhoneMobileNumber(employeeExistingTwo.getContactDetails().getPhoneMobileNumber());
+		employeeExistingOne.setContactDetails(contactDetails);
+		
+		// when
+		thrown.expect(EmployeeEntityDataIntegrityViolationException.class);
+		thrown.expectMessage("Provided employee's mobile phone number is the same as employee with id = ");
+		
+		// then
+		employeeService.updateEmployee(employeeExistingOne);
+	}
     
+	@Transactional
     @Test
     public void testShouldSaveEmployee() throws Exception {
     	// given
@@ -155,6 +256,7 @@ public class EmployeeServiceTest {
     	assertEquals(idDepartament, employeeSaved.getDepartament().getId());
     }
     
+	@Transactional
     @Test
     public void testShouldThrowExceptionWhenSaveEmployee() throws Exception {
 		// given
@@ -162,8 +264,8 @@ public class EmployeeServiceTest {
 		EmployeeEntity employeeExisting = employeeService.findEmployeeById(idEmployeeThatExist);
 		
 		// when
-		thrown.expect(EmployeeEntityExistsException.class);
-		thrown.expectMessage("Employee entity cannot be saved, because it already exists!");
+		thrown.expect(EmployeeEntityDataIntegrityViolationException.class);
+		thrown.expectMessage(" already exists and therefore cannot be added!");
 		
 		// then
 		employeeService.saveEmployee(employeeExisting);
@@ -211,6 +313,7 @@ public class EmployeeServiceTest {
 		}
 	}
 	
+	@Transactional
 	@Test
 	public void testDeleteEmployee() throws Exception {
 		// given
@@ -224,6 +327,7 @@ public class EmployeeServiceTest {
 		Assert.assertNull(employeeService.findEmployeeById(idEmployeeToBeDeleted));
 	}
 	
+	@Transactional
 	@Test
 	public void testShouldThrowExceptionWhenDeleteEmployee() throws Exception {
 		// given
@@ -240,6 +344,7 @@ public class EmployeeServiceTest {
 		employeeService.deleteEmployee(employeeExisting);
 	}
 	
+	@Transactional
 	@Test
 	public void testShouldThrowAnotherExceptionWhenDeleteEmployee() throws Exception {
 		// given
@@ -254,6 +359,7 @@ public class EmployeeServiceTest {
 		employeeService.deleteEmployee(employeeThatIsManagingProject);
 	}
 	
+	@Transactional
 	@Test
 	public void testShouldThrowOptimisticLockExceptionWhenSimultaneoslyUpdatingSameRecord() throws Exception {
 		// given

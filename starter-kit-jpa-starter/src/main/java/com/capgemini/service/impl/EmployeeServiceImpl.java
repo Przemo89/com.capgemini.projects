@@ -28,12 +28,25 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Override
 	@Transactional(readOnly = false)
-	public EmployeeEntity saveEmployee(EmployeeEntity employee) throws EmployeeEntityExistsException {
-		if (employeeRepository.exists(employee.getId())) {
-			throw new EmployeeEntityExistsException();
+	public EmployeeEntity saveEmployee(EmployeeEntity employee) throws EmployeeEntityDataIntegrityViolationException {
+		List<EmployeeEntity> employeesWithSameFields = employeeRepository.findEmployeesWithSameIdPinEmailAndPhones(employee);
+		isEmployeeToBeSavedViolatesConstraints(employeesWithSameFields, employee);
+		return employeeRepository.save(employee);
+	}
+	
+	private void isEmployeeToBeSavedViolatesConstraints(List<EmployeeEntity> employeesWithSameFields, EmployeeEntity employeeToBeChecked) 
+			throws EmployeeEntityDataIntegrityViolationException {
+		
+		if (employeesWithSameFields.isEmpty()) {
+			return;
 		}
-		EmployeeEntity employeeSaved = employeeRepository.save(employee);
-		return employeeSaved;
+		for (EmployeeEntity employee : employeesWithSameFields) {
+			if (employee.getId() == employeeToBeChecked.getId()) {
+				throw new EmployeeEntityDataIntegrityViolationException("Employee with id = " + employeeToBeChecked.getId() + 
+						" already exists and therefore cannot be added!");
+			}
+			isEmployeePinOrContactDetailsRepeated(employeeToBeChecked, employee);
+		}
 	}
 
 	@Override
@@ -52,43 +65,65 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional(readOnly = false)
 	public EmployeeEntity updateEmployee(EmployeeEntity employee) 
-			throws EmployeeEntityNotExistException, EmployeeEntityDataIntegrityViolationException {
-//		if (employeeRepository.findOne(employee.getId()) == null) {
-//			throw new EmployeeEntityNotExistException(employee.getId());
-//		}
-//		if (employee.get)
-		
+			throws EmployeeEntityDataIntegrityViolationException {
 		List<EmployeeEntity> employeesWithSameFields = employeeRepository.findEmployeesWithSameIdPinEmailAndPhones(employee);
-		EmployeeEntity employeeUpdated = new EmployeeEntity();
-		if (employeesWithSameFields.isEmpty()) {
-			throw new EmployeeEntityDataIntegrityViolationException("Employee with id = " + employee.getId() + 
-					" does not exist and therefore cannot be updated!");
-//			isEmployeeToBeSavedOrUpdatedViolatesConstraints(employeesWithSameFields, employee);
-		}
-		try {
-			employeeUpdated = employeeRepository.update(employee);
-		} catch (Exception e) {
-			//TODO find this exception which might be throwed and throw yours
-		}
-		return employeeUpdated;
+		isEmployeeToBeUpdatedViolatesConstraints(employeesWithSameFields, employee);
+		return employeeRepository.update(employee);
 	}
 	
-	private void isEmployeeToBeSavedOrUpdatedViolatesConstraints(List<EmployeeEntity> employeesWithSameFields, EmployeeEntity employeeToBeChecked) 
-			throws EmployeeEntityNotExistException, EmployeeEntityDataIntegrityViolationException{
+	private void isEmployeeToBeUpdatedViolatesConstraints(List<EmployeeEntity> employeesWithSameFields, EmployeeEntity employeeToBeChecked) 
+			throws EmployeeEntityDataIntegrityViolationException {
+		boolean isEmployeeEntityExists = false;
+		if (employeesWithSameFields.isEmpty()) {
+			throw new EmployeeEntityDataIntegrityViolationException("Employee with id = " + employeeToBeChecked.getId() + 
+					" does not exist and therefore cannot be updated!");
+		}
 		for (EmployeeEntity employee : employeesWithSameFields) {
-			if (employee.getId() == employeeToBeChecked.getId()) {
-//				throw new EmployeeEntityDataIntegrityViolationException(message)
+			if (employee.getId() != employeeToBeChecked.getId()) {
+				isEmployeePinOrContactDetailsRepeated(employeeToBeChecked, employee);
+			} else {
+				isEmployeeEntityExists = true;
 			}
 		}
+		if (isEmployeeEntityExists == false) {
+			throw new EmployeeEntityDataIntegrityViolationException("Employee with id = " + employeeToBeChecked.getId() + 
+					" does not exist and therefore cannot be updated!");
+		}
 	}
-	
-	
+
+	private void isEmployeePinOrContactDetailsRepeated(EmployeeEntity employeeToBeChecked, EmployeeEntity employee)
+			throws EmployeeEntityDataIntegrityViolationException {
+		if (employee.getPin().equals(employeeToBeChecked.getPin())) {
+			throw new EmployeeEntityDataIntegrityViolationException(
+					"Provided employee's PIN is the same as employee with id = " + employee.getId() 
+					+ "! Please provide proper PIN or correct existing employee's.");
+		}
+		if (employee.getContactDetails().getEmail()
+				.equals(employeeToBeChecked.getContactDetails().getEmail())) {
+			throw new EmployeeEntityDataIntegrityViolationException(
+					"Provided employee's email is the same as employee with id = " + employee.getId() 
+					+ "! Please provide proper email or correct existing employee's.");
+		}
+		if (employee.getContactDetails().getPhoneMobileNumber()
+				.equals(employeeToBeChecked.getContactDetails().getPhoneMobileNumber())) {
+			throw new EmployeeEntityDataIntegrityViolationException(
+					"Provided employee's mobile phone number is the same as employee with id = " + employee.getId() 
+					+ "! Please provide proper mobile phone number or correct existing employee's.");
+		}
+		if (employee.getContactDetails().getPhoneStationaryNumber()
+				.equals(employeeToBeChecked.getContactDetails().getPhoneStationaryNumber())) {
+			throw new EmployeeEntityDataIntegrityViolationException(
+					"Provided employee's stationary phone number is the same as employee with id = " + employee.getId() 
+					+ "! Please provide proper stationary phone number or correct existing employee's.");
+		}
+	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public int setEmployeeDepartament(Long idEmployee, Long idDepartament) throws EmployeeEntityNotExistException {
+	public int setEmployeeDepartament(Long idEmployee, Long idDepartament) throws EmployeeEntityDataIntegrityViolationException {
 		if (!employeeRepository.exists(idEmployee)) {
-			throw new EmployeeEntityNotExistException(idEmployee);
+			throw new EmployeeEntityDataIntegrityViolationException("Employee with id = " + idEmployee + 
+					" does not exist and therefore cannot be updated!");
 		}
 		return employeeRepository.setEmployeeDepartament(idEmployee, idDepartament);
 	}

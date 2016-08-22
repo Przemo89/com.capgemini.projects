@@ -10,14 +10,14 @@ import com.capgemini.exceptions.EmployeeEntityNotExistException;
 
 public interface EmployeeService {
 
-	EmployeeEntity saveEmployee(EmployeeEntity employee) throws EmployeeEntityExistsException;
+	EmployeeEntity saveEmployee(EmployeeEntity employee) throws EmployeeEntityDataIntegrityViolationException;
 	
 	void deleteEmployee(EmployeeEntity employee) throws EmployeeEntityNotExistException, EmployeeEntityIsManagerOfProjectException;
 	
 	EmployeeEntity updateEmployee(EmployeeEntity employee) 
-			throws EmployeeEntityNotExistException, EmployeeEntityDataIntegrityViolationException;
+			throws EmployeeEntityDataIntegrityViolationException;
 	
-	int setEmployeeDepartament(Long idEmployee, Long idDepartament) throws EmployeeEntityNotExistException;
+	int setEmployeeDepartament(Long idEmployee, Long idDepartament) throws EmployeeEntityDataIntegrityViolationException;
 	
 	List<EmployeeEntity> findEmployeeByFirstAndLastName(String firstName, String lastName);
 	EmployeeEntity findEmployeeById(Long id);
