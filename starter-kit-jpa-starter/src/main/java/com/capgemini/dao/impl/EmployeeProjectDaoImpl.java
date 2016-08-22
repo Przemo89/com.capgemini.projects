@@ -47,4 +47,19 @@ public class EmployeeProjectDaoImpl extends AbstractDao<EmployeeProjectEntity, L
 		return query.getResultList();
 	}
 	
+	@Override
+	public List<EmployeeEntity> findEmployeesWorkingInSpecificProjectForSpecificTimeInHql(long idProject,
+			int numberOfMonths) {
+		TypedQuery<EmployeeEntity> query = entityManager.createQuery( 
+				"select e from EmployeeEntity e "
+				+ "left join e.employeeProjects ep "
+				+ "where timestampdiff(sql_tsi_month, hire_date, coalesce(termination_date, curdate())) > :number_of_months "
+				+ "and id_project = :id_project "
+				+ "group by e "
+				+ "order by e asc"
+				, EmployeeEntity.class);
+		query.setParameter("id_project", idProject);
+		query.setParameter("number_of_months", numberOfMonths);
+		return query.getResultList();
+	}
 }

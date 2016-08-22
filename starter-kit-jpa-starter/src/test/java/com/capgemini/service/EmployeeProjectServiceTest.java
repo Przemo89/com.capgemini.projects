@@ -94,7 +94,30 @@ public class EmployeeProjectServiceTest {
 		
 		// when
 		List<EmployeeEntity> resultList = employeeProjectService.
-				findEmployeesWorkingInSpecificProjectForSpecificTime(idProjectExisting, numberOfMonths);;
+				findEmployeesWorkingInSpecificProjectForSpecificTime(idProjectExisting, numberOfMonths);
+		
+		// then
+		Assert.assertEquals(properResultListSize, resultList.size());
+		Assert.assertEquals(idEmployeeOne, resultList.get(0).getId());
+		Assert.assertEquals(idEmployeeTwo, resultList.get(1).getId());
+		Assert.assertEquals(idEmployeeThree, resultList.get(2).getId());
+		Assert.assertEquals(idEmployeeFour, resultList.get(3).getId());
+	}
+	
+	@Test
+	public void testFindEmployeesWorkingInSpecificProjectForSpecificNumberMonthsInHql() throws Exception {
+		// given
+		final long idProjectExisting = 3L;
+		final int numberOfMonths = 8;
+		int properResultListSize = 4;
+		final long idEmployeeOne = 7L;
+		final long idEmployeeTwo = 8L;
+		final long idEmployeeThree = 9L;
+		final long idEmployeeFour = 13L;
+		
+		// when
+		List<EmployeeEntity> resultList = employeeProjectService.
+				findEmployeesWorkingInSpecificProjectForSpecificTimeInHql(idProjectExisting, numberOfMonths);
 		
 		// then
 		Assert.assertEquals(properResultListSize, resultList.size());

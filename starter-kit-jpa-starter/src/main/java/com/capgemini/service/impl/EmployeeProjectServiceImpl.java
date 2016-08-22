@@ -60,5 +60,10 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
 		return employeeProjectRepository.findEmployeesWorkingInSpecificProjectForSpecificTime(idProject, numberOfMonths);
 	}
 
-	
+	@Override
+	public List<EmployeeEntity> findEmployeesWorkingInSpecificProjectForSpecificTimeInHql(long idProject,
+			int numberOfMonths) {
+		// TODO Auto-generated method stub
+		return employeeProjectRepository.findEmployeesWorkingInSpecificProjectForSpecificTimeInHql(idProject, numberOfMonths);
+	}
 }

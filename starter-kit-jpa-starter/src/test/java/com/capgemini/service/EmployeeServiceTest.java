@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
@@ -381,5 +382,93 @@ public class EmployeeServiceTest {
 		// when
 		entityManager.merge(employeeSecondTime);
 	}
+	
+	@Transactional
+	@Test
+	public void testShouldUpdateLastModificationDateWhenUpdate() throws Exception {
+		// given
+		final long idEmployeeExisting = 4L;
 
+		EmployeeEntity employeeExisting = employeeService.findEmployeeById(idEmployeeExisting);
+		entityManager.detach(employeeExisting);
+		
+		final String firstName = "Zenonn";
+		final String lastName = "Grzybobralski";
+    	final String pin = "32343553333";
+    	final String email = "ran23om@randfom.com";
+    	final String phoneHomeNumber = "713544779";
+    	final String phoneWorkNumber = "772345490";
+    	final ContactDetails contactDetails = new ContactDetails();
+    	contactDetails.setEmail(email);
+    	contactDetails.setPhoneStationaryNumber(phoneHomeNumber);
+    	contactDetails.setPhoneMobileNumber(phoneWorkNumber);
+    	EmployeeEntity employeeToBeSaved = new EmployeeEntity();
+    	employeeToBeSaved.setDepartament(employeeExisting.getDepartament());
+    	employeeToBeSaved.setFirstName(firstName);
+    	employeeToBeSaved.setLastName(lastName);
+    	employeeToBeSaved.setPin(pin);
+    	employeeToBeSaved.setBirthDate(employeeExisting.getBirthDate());
+    	employeeToBeSaved.setContactDetails(contactDetails);
+    	
+    	EmployeeEntity employeeSaved = employeeService.saveEmployee(employeeToBeSaved);
+    	entityManager.flush();
+    	entityManager.detach(employeeSaved);
+		final String firstNameNew = "CompleteRandom";
+    	employeeSaved.setFirstName(firstNameNew);
+		
+		// when
+		TimeUnit.SECONDS.sleep(1);
+		EmployeeEntity employeeUpdated = employeeService.updateEmployee(employeeSaved);
+		entityManager.flush();
+		entityManager.detach(employeeUpdated);
+		
+		// then
+		Assert.assertNotEquals(employeeSaved.getLastModifiedDate(), employeeUpdated.getLastModifiedDate());
+	}
+	
+	@Transactional
+	@Test
+	public void testShouldUpdateVersionWhenUpdate() throws Exception {
+		// given
+		final long idEmployeeExisting = 4L;
+
+		EmployeeEntity employeeExisting = employeeService.findEmployeeById(idEmployeeExisting);
+		entityManager.detach(employeeExisting);
+		
+		final String firstName = "Zenonnnn";
+		final String lastName = "Grzybobralskid";
+    	final String pin = "32343558033";
+    	final String email = "ran239m@randfom.com";
+    	final String phoneHomeNumber = "713544879";
+    	final String phoneWorkNumber = "772345790";
+    	final ContactDetails contactDetails = new ContactDetails();
+    	contactDetails.setEmail(email);
+    	contactDetails.setPhoneStationaryNumber(phoneHomeNumber);
+    	contactDetails.setPhoneMobileNumber(phoneWorkNumber);
+    	EmployeeEntity employeeToBeSaved = new EmployeeEntity();
+    	employeeToBeSaved.setDepartament(employeeExisting.getDepartament());
+    	employeeToBeSaved.setFirstName(firstName);
+    	employeeToBeSaved.setLastName(lastName);
+    	employeeToBeSaved.setPin(pin);
+    	employeeToBeSaved.setBirthDate(employeeExisting.getBirthDate());
+    	employeeToBeSaved.setContactDetails(contactDetails);
+    	
+    	EmployeeEntity employeeSaved = employeeService.saveEmployee(employeeToBeSaved);
+    	entityManager.flush();
+    	entityManager.detach(employeeSaved);
+		final String firstNameNew = "CompleteRandom34";
+    	employeeSaved.setFirstName(firstNameNew);
+    	
+    	final Integer properVersionNumberOne = 1;
+    	final Integer properVersionNumberTwo = 2;
+		
+		// when
+		EmployeeEntity employeeUpdated = employeeService.updateEmployee(employeeSaved);
+		entityManager.flush();
+		entityManager.detach(employeeUpdated);
+		
+		// then
+		Assert.assertEquals(properVersionNumberOne, employeeSaved.getVersion());
+		Assert.assertEquals(properVersionNumberTwo, employeeUpdated.getVersion());
+	}
 }

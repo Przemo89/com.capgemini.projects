@@ -20,4 +20,6 @@ public interface EmployeeProjectService {
 	List<EmployeeEntity> findEmployeesCurrentlyWorkingInSpecificProject(long idProject);
 	
 	List<EmployeeEntity> findEmployeesWorkingInSpecificProjectForSpecificTime(long idProject, int numberOfMonths);
+	
+	List<EmployeeEntity> findEmployeesWorkingInSpecificProjectForSpecificTimeInHql(long idProject, int numberOfMonths);
 }
