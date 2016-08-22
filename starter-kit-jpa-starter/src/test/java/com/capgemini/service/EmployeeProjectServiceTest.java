@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.domain.EmployeeProjectEntity;
+import com.capgemini.domain.ProjectEntity;
 import com.capgemini.enumerations.EmployeeFunction;
 import com.capgemini.exceptions.EmployeeProjectEntityDataIntegrityViolationException;
 
@@ -81,6 +82,22 @@ public class EmployeeProjectServiceTest {
 		
 		// then
 		Assert.assertEquals(properResult, numberOfUpdatedEmployeeProject);
+	}
+	
+	@Test
+	public void testShouldThrowExceptionWhenSettingTerminationDateInEmployeeProjectWhichNotExist() throws Exception {
+		// given
+		final long idEmployeeProjectNotExisting = 80L;
+		final EmployeeProjectEntity employeeProject = new EmployeeProjectEntity();
+		employeeProject.setId(idEmployeeProjectNotExisting);
+		Date terminationDate = new Date();
+		
+		// then
+		thrown.expect(EmployeeProjectEntityDataIntegrityViolationException.class);
+		thrown.expectMessage("There is no such EmployeeProject entity as provided!");
+		
+		// when
+		employeeProjectService.setEmployeeTerminationDateInProject(employeeProject, terminationDate);
 	}
 	
 	@Test
@@ -150,27 +167,25 @@ public class EmployeeProjectServiceTest {
 	@Test
 	public void testShouldSaveEmployeeProject() throws Exception {
 		// given
-		final long idEmployeeProject = 20L;
-		final long idEmployeeProjectExisting = 9L;
-		final long idEmployeeProjectNotExisting = 90L;
+		final EmployeeEntity employee = employeeService.findEmployeeById(1L);
+		final ProjectEntity project = projectService.findProjectById(2L);
 		final BigDecimal salaryValid = new BigDecimal(20);
 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
-		Date hireDateNew = (Date) formatter.parse("2016-08-10"); 
+		Date hireDate = (Date) formatter.parse("2016-08-10"); 
 
 		EmployeeProjectEntity employeeProjectToBeSaved = new EmployeeProjectEntity();
-		employeeProjectToBeSaved.setHireDate(hireDateNew);
+		employeeProjectToBeSaved.setHireDate(hireDate);
 		employeeProjectToBeSaved.setTerminationDate(null);
 		employeeProjectToBeSaved.setEmployeeFunction(EmployeeFunction.FCD);
-		employeeProjectToBeSaved.setEmployee(employeeService.findEmployeeById(1L));
-		employeeProjectToBeSaved.setProject(projectService.findProjectById(2L));
+		employeeProjectToBeSaved.setEmployee(employee);
+		employeeProjectToBeSaved.setProject(project);
 		employeeProjectToBeSaved.setSalary(salaryValid);
-		
-		// then
-//		thrown.expect(EmployeeProjectEntityDataIntegrityViolationException.class);
-//		thrown.expectMessage(" within provided time frame and therefore cannot be added!");
 		
 		// when
 		EmployeeProjectEntity employeeProjectSaved = employeeProjectService.saveEmployeeProject(employeeProjectToBeSaved);
+		
+		// then
+		Assert.assertEquals(hireDate, employeeProjectSaved.getHireDate());
 	}
 	
 	@Test

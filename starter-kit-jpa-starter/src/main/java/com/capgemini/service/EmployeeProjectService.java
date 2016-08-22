@@ -6,13 +6,11 @@ import java.util.List;
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.domain.EmployeeProjectEntity;
 import com.capgemini.exceptions.EmployeeProjectEntityDataIntegrityViolationException;
-import com.capgemini.exceptions.EmployeeProjectEntityExistsException;
-import com.capgemini.exceptions.EmployeeProjectEntityNotExistsException;
 
 public interface EmployeeProjectService {
 
 	int setEmployeeTerminationDateInProject(EmployeeProjectEntity employeeProject, 
-			Date terminationDate) throws EmployeeProjectEntityNotExistsException;
+			Date terminationDate) throws EmployeeProjectEntityDataIntegrityViolationException;
 	
 	EmployeeProjectEntity saveEmployeeProject(EmployeeProjectEntity employeeProject) 
 			throws EmployeeProjectEntityDataIntegrityViolationException;

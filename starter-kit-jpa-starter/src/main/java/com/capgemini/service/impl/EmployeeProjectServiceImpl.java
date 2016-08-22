@@ -12,7 +12,6 @@ import com.capgemini.dao.EmployeeProjectDao;
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.domain.EmployeeProjectEntity;
 import com.capgemini.exceptions.EmployeeProjectEntityDataIntegrityViolationException;
-import com.capgemini.exceptions.EmployeeProjectEntityNotExistsException;
 import com.capgemini.service.EmployeeProjectService;
 
 @Service
@@ -25,9 +24,9 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
 	@Override
 	@Transactional(readOnly = false)
 	public int setEmployeeTerminationDateInProject(EmployeeProjectEntity employeeProject, Date terminationDate)
-			throws EmployeeProjectEntityNotExistsException {
+			throws EmployeeProjectEntityDataIntegrityViolationException {
 		if (!employeeProjectRepository.exists(employeeProject.getId())) {
-			throw new EmployeeProjectEntityNotExistsException();
+			throw new EmployeeProjectEntityDataIntegrityViolationException("There is no such EmployeeProject entity as provided!");
 		}
 		return employeeProjectRepository.setEmployeeTerminationDateInProject(employeeProject, terminationDate);
 	}
@@ -43,7 +42,6 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
 	@Override
 	public EmployeeProjectEntity saveEmployeeProject(EmployeeProjectEntity employeeProject)
 			throws EmployeeProjectEntityDataIntegrityViolationException {
-		// TODO Auto-generated method stub
 		isHireDateAndSalaryValid(employeeProject);
 		isEmployeeProjectAlreadyExists(employeeProject);
 		return employeeProjectRepository.save(employeeProject);
@@ -51,7 +49,7 @@ public class EmployeeProjectServiceImpl implements EmployeeProjectService {
 
 	private void isEmployeeProjectAlreadyExists(EmployeeProjectEntity employeeProject)
 			throws EmployeeProjectEntityDataIntegrityViolationException {
-		if (employeeProjectRepository.findOne(employeeProject.getId()) != null) {
+		if (employeeProjectRepository.exists(employeeProject.getId())) {
 			throw new EmployeeProjectEntityDataIntegrityViolationException(
 					"Employee participation in specified project with id = "+ employeeProject.getId()
 					+ " already exists and therefore cannot be added!");
